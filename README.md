@@ -18,17 +18,18 @@ Toko kelontong seringkali mencatat penjualan di dua tempat berbeda: sebagian di 
 - **Autentikasi Aman** — kata sandi tersimpan dalam bentuk hashing
 
 ### Fitur Tambahan (opsional)
+
 - Pembayaran QRIS / payment gateway
 - Pemindaian barcode
 - Ekspor laporan (PDF/Excel/CSV)
 
 ## Tech Stack
 
-| Layer | Teknologi |
-|---|---|
-| Backend | ExpressJS (Node.js) |
-| Database | MongoDB |
-| Frontend | React / Next.js |
+| Layer    | Teknologi           |
+| -------- | ------------------- |
+| Backend  | ExpressJS (Node.js) |
+| Database | MongoDB             |
+| Frontend | React / Next.js     |
 
 ## Struktur Proyek
 
@@ -61,14 +62,17 @@ Buat file `.env` pada masing-masing folder (`backend` dan `frontend`) sesuai con
 
 ## Peran Pengguna
 
-| Peran | Akses |
-|---|---|
+| Peran               | Akses                                                              |
+| ------------------- | ------------------------------------------------------------------ |
 | **Pemilik (Owner)** | Kelola produk, atur harga & stok, lihat laporan, kelola akun kasir |
-| **Kasir (Cashier)** | Menjalankan transaksi penjualan |
+| **Kasir (Cashier)** | Menjalankan transaksi penjualan                                    |
 
-## Tim Pengembang
+## Anggota Tim
 
-_(tambahkan nama & pembagian tugas anggota tim di sini)_
+1. Project Manager:
+2. Front End: Monica Anastasya Dantina (24/544527/TK/60525)
+3. Front End:
+4. Back End:
 
 ## Lisensi
 
