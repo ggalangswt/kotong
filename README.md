@@ -71,9 +71,5 @@ Buat file `.env` pada masing-masing folder (`backend` dan `frontend`) sesuai con
 
 1. Project Manager:
 2. Front End: Monica Anastasya Dantina (24/544527/TK/60525)
-3. Front End:
+3. Front End: Diaz Amantajati Susilo (24/545483/TK/60678)
 4. Back End:
-
-## Lisensi
-
-_(tentukan lisensi proyek, misalnya MIT)_
