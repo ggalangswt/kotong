@@ -20,7 +20,6 @@ Toko kelontong seringkali mencatat penjualan di dua tempat berbeda: sebagian di 
 ### Fitur Tambahan (opsional)
 
 - Pembayaran QRIS / payment gateway
-- Pemindaian barcode
 - Ekspor laporan (PDF/Excel/CSV)
 
 ## Tech Stack
