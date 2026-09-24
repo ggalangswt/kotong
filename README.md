@@ -64,7 +64,7 @@ Buat file `.env` pada masing-masing folder (`backend` dan `frontend`) sesuai con
 
 | Peran               | Akses                                                              |
 | ------------------- | ------------------------------------------------------------------ |
-| **Pemilik (Owner)** | Kelola produk, atur harga & stok, lihat laporan, kelola akun kasir |
+| **Admin (Admin)** | Kelola produk, atur harga & stok, lihat laporan, kelola akun kasir |
 | **Kasir (Cashier)** | Menjalankan transaksi penjualan                                    |
 
 ## Anggota Tim
