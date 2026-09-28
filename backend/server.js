@@ -1,32 +1,25 @@
-const express = require('express');
+require('dotenv').config();
 
-const app = express();
-const notImplemented = (_req, res) => res.status(501).json({ error: 'Not implemented' });
+const mongoose = require('mongoose');
+const app = require('./src/app');
 
-app.post('/api/auth/login', notImplemented);
+async function start() {
+  const { MONGODB_URI, JWT_SECRET } = process.env;
+  const port = Number(process.env.PORT || 4000);
 
-app.get('/api/cashiers', notImplemented);
-app.post('/api/cashiers', notImplemented);
-app.patch('/api/cashiers/:id/status', notImplemented);
+  if (!MONGODB_URI) throw new Error('MONGODB_URI is required');
+  if (!JWT_SECRET || JWT_SECRET.length < 32) {
+    throw new Error('JWT_SECRET must be at least 32 characters');
+  }
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new Error('PORT must be a valid TCP port');
+  }
 
-app.get('/api/products', notImplemented);
-app.post('/api/products', notImplemented);
-app.patch('/api/products/:id', notImplemented);
-app.delete('/api/products/:id', notImplemented);
-app.post('/api/products/:id/stock-adjustments', notImplemented);
-app.get('/api/products/:id/stock-movements', notImplemented);
-app.get('/api/products/low-stock', notImplemented);
+  await mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 10000 });
+  app.listen(port, () => console.log(`Kotong backend listening on port ${port}`));
+}
 
-app.post('/api/transactions', notImplemented);
-app.get('/api/transactions', notImplemented);
-app.get('/api/transactions/:id', notImplemented);
-
-app.get('/api/reports/daily-revenue', notImplemented);
-app.get('/api/reports/best-sellers', notImplemented);
-
-// Rute fitur lanjutan.
-app.get('/api/reports/export', notImplemented);
-app.post('/api/payments/webhook', notImplemented);
-
-const port = process.env.PORT || 4000;
-app.listen(port, () => console.log(`Kotong backend listening on port ${port}`));
+start().catch((error) => {
+  console.error('Failed to start Kotong backend:', error);
+  process.exitCode = 1;
+});
