@@ -2,6 +2,7 @@ const express = require("express");
 const authRoutes = require("./routes/auth");
 const cashierRoutes = require("./routes/cashiers");
 const transactionRoutes = require("./routes/transactions");
+const reportRoutes = require("./routes/reports");
 const { requireAuth, requireRole } = require("./middleware/auth");
 const productRoutes = require("./routes/Products");
 
@@ -55,17 +56,11 @@ app.get(
 
 app.use("/api/transactions", requireAuth, requireRole("admin", "cashier"), transactionRoutes);
 
-app.get(
-  "/api/reports/daily-revenue",
+app.use(
+  "/api/reports",
   requireAuth,
   requireRole("admin"),
-  notImplemented,
-);
-app.get(
-  "/api/reports/best-sellers",
-  requireAuth,
-  requireRole("admin"),
-  notImplemented,
+  reportRoutes,
 );
 app.get(
   "/api/reports/export",
