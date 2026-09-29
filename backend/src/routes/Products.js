@@ -204,6 +204,36 @@ router.post(
   },
 );
 
+// GET /api/products/:id/stock-movements
+router.get(
+  "/:id/stock-movements",
+  requireAuth,
+  requireRole("admin"),
+  async (req, res) => {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(400).json({ error: "Invalid product id" });
+    }
+
+    const product = await Product.findOne({
+      _id: req.params.id,
+      isActive: { $ne: false },
+    });
+
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    const movements = await StockMovement.find({
+      productId: req.params.id,
+    }).sort({
+      createdAt: -1,
+      _id: -1,
+    });
+
+    res.json({ movements });
+  },
+);
+
 // DELETE /api/products/:id
 router.delete("/:id", requireAuth, requireRole("admin"), async (req, res) => {
   if (!mongoose.isValidObjectId(req.params.id)) {
