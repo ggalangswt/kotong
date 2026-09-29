@@ -1,8 +1,9 @@
 const express = require("express");
 const authRoutes = require("./routes/auth");
 const cashierRoutes = require("./routes/cashiers");
+const transactionRoutes = require("./routes/transactions");
 const { requireAuth, requireRole } = require("./middleware/auth");
-const productRoutes = require("./routes/products");
+const productRoutes = require("./routes/Products");
 
 const app = express();
 const notImplemented = (_req, res) =>
@@ -52,24 +53,7 @@ app.get(
   notImplemented,
 );
 
-app.post(
-  "/api/transactions",
-  requireAuth,
-  requireRole("cashier"),
-  notImplemented,
-);
-app.get(
-  "/api/transactions",
-  requireAuth,
-  requireRole("admin", "cashier"),
-  notImplemented,
-);
-app.get(
-  "/api/transactions/:id",
-  requireAuth,
-  requireRole("admin", "cashier"),
-  notImplemented,
-);
+app.use("/api/transactions", requireAuth, requireRole("admin", "cashier"), transactionRoutes);
 
 app.get(
   "/api/reports/daily-revenue",

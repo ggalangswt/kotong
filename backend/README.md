@@ -27,11 +27,21 @@ Semua error berbentuk `{ "error": "pesan" }`. Kode utama: `400` input salah, `40
 
 ## Integrasi modul anggota lain
 
-Impor `{ requireAuth, requireRole }` dari `src/middleware/auth.js`. Pasang berurutan, misalnya `router.post('/', requireAuth, requireRole('admin'), handler)`. Setelah `requireAuth`, `req.user` berisi `{ id, name, email, role }` dari database terkini. Implementasi riwayat transaksi oleh Diaz perlu membatasi query Kasir ke `req.user.id`; Admin dapat melihat seluruh riwayat. Kasir dapat melihat produk dan membuat transaksi. Admin mengelola Kasir, produk, stok, dan laporan.
+Impor `{ requireAuth, requireRole }` dari `src/middleware/auth.js`. Pasang berurutan, misalnya `router.post('/', requireAuth, requireRole('admin'), handler)`. Setelah `requireAuth`, `req.user` berisi `{ id, name, email, role }` dari database terkini. Riwayat transaksi membatasi query Kasir ke `req.user.id`; Admin dapat melihat seluruh riwayat. Kasir dapat melihat produk dan membuat transaksi. Admin mengelola Kasir, produk, stok, dan laporan.
 
-Route produk, transaksi, dan laporan sekarang berupa stub di `src/app.js`. Saat menggantinya, pertahankan middleware akses. Route `/api/products/low-stock` harus didaftarkan sebelum `/api/products/:id`.
+Route laporan masih berupa stub di `src/app.js`. Saat menggantinya, pertahankan middleware akses. Route `/api/products/low-stock` harus didaftarkan sebelum `/api/products/:id`.
+
+## Transaksi tunai
+
+`POST /api/transactions` hanya untuk Kasir. Body: `{ "paymentMethod": "cash", "items": [{ "productId": "<ObjectId>", "quantity": 2 }] }`. Produk tidak boleh berulang. Respons sukses `201 { "transaction": { "id", "date", "cashierId", "items", "totalAmount", "paymentMethod" } }`. Setiap item menyimpan `productId`, `productName`, `quantity`, `priceAtTransaction`, dan `subtotal`; harga diambil dari produk saat transaksi, bukan dari request. `400` untuk input salah, `404` untuk produk tidak ditemukan, dan `409` untuk stok tidak cukup.
+
+`GET /api/transactions` mengembalikan `{ "transactions": [...] }` terbaru dahulu. `GET /api/transactions/:id` mengembalikan `{ "transaction": ... }`. Admin dapat membaca semua transaksi; Kasir hanya transaksi miliknya. ID salah menghasilkan `400`, dan transaksi yang tidak ditemukan atau bukan milik Kasir menghasilkan `404`.
+
+Kontrak integrasi sementara: transaksi membaca koleksi `products` dengan field `_id`, `name` (string), `price` (bilangan bulat rupiah), `stock` (bilangan bulat), dan `isActive` (produk bernilai `false` tidak dapat dijual). Setiap penjualan menulis koleksi `stockmovements` dengan `productId`, `transactionId`, `type: "sale"`, `quantity` negatif, `stockBefore`, `stockAfter`, dan `createdAt`. Bentuk catatan stok perlu dicocokkan dengan model StockMovement milik Ninda saat digabungkan. Pengurangan stok, penyimpanan transaksi, dan catatan stok memakai satu transaksi MongoDB; server MongoDB harus mendukung transaksi multi-dokumen.
 
 File `postman/Kotong-Galang.postman_collection.json` berisi contoh request. Login Admin menyimpan token ke variabel koleksi `token` secara otomatis.
+
+File `postman/Kotong-Diaz.postman_collection.json` berisi login Kasir dan uji tiga endpoint transaksi. Isi variabel `cashierEmail`, `cashierPassword`, dan `productId` sebelum menjalankan koleksi. Request "Buat Transaksi Tunai" membuat data dan mengurangi stok pada database yang terhubung.
 
 ## Uji
 
