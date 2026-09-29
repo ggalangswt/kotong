@@ -102,7 +102,7 @@ test('Admin seed, authentication, cashier management, and access control', async
       assert.equal((await request(app).get('/api/products').set('Authorization', `Bearer ${expired}`)).status, 401);
       assert.equal((await request(app).get('/api/cashiers').set('Authorization', `Bearer ${cashierToken}`)).status, 403);
       assert.equal((await request(app).get('/api/products/low-stock').set('Authorization', `Bearer ${cashierToken}`)).status, 403);
-      assert.equal((await request(app).get('/api/products/low-stock').set('Authorization', `Bearer ${adminToken}`)).status, 501);
+      assert.equal((await request(app).get('/api/products/low-stock').set('Authorization', `Bearer ${adminToken}`)).status, 200);
     });
 
     await t.test('deactivation invalidates an existing token immediately', async () => {
