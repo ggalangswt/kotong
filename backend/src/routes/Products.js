@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Product = require("../models/Product");
+const StockMovement = require("../models/StockMovement");
 
 // lalu sesuaikan nama fungsi di baris require ini dan pemakaiannya di bawah.
 // Kemungkinan namanya requireAuth / requireRole('owner') / isOwner / ownerOnly.
@@ -127,6 +128,81 @@ router.patch("/:id", requireAuth, requireRole("admin"), async (req, res) => {
   if (!product) return res.status(404).json({ error: "Product not found" });
   res.json({ product });
 });
+
+// POST /api/products/:id/stock-adjustments
+router.post(
+  "/:id/stock-adjustments",
+  requireAuth,
+  requireRole("admin"),
+  async (req, res) => {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(400).json({ error: "Invalid product id" });
+    }
+
+    const { quantity } = req.body ?? {};
+
+    if (!Number.isSafeInteger(quantity) || quantity === 0) {
+      return res.status(400).json({
+        error: "Quantity must be a non-zero integer",
+      });
+    }
+
+    const session = await mongoose.startSession();
+
+    try {
+      let movement;
+
+      await session.withTransaction(async () => {
+        const product = await Product.findOne({
+          _id: req.params.id,
+          isActive: { $ne: false },
+        }).session(session);
+
+        if (!product) {
+          const error = new Error("Product not found");
+          error.status = 404;
+          throw error;
+        }
+
+        const stockBefore = product.stock;
+        const stockAfter = stockBefore + quantity;
+
+        if (stockAfter < 0) {
+          const error = new Error("Stock cannot be negative");
+          error.status = 400;
+          throw error;
+        }
+
+        product.stock = stockAfter;
+        await product.save({ session });
+
+        [movement] = await StockMovement.create(
+          [
+            {
+              productId: product._id,
+              transactionId: null,
+              type: "adjustment",
+              quantity,
+              stockBefore,
+              stockAfter,
+            },
+          ],
+          { session },
+        );
+      });
+
+      return res.status(201).json({ movement });
+    } catch (error) {
+      if (error.status) {
+        return res.status(error.status).json({ error: error.message });
+      }
+
+      throw error;
+    } finally {
+      await session.endSession();
+    }
+  },
+);
 
 // DELETE /api/products/:id
 router.delete("/:id", requireAuth, requireRole("admin"), async (req, res) => {
