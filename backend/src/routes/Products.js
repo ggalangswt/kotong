@@ -25,16 +25,25 @@ function validStock(value) {
 
 // GET /api/products/low-stock
 // PENTING: harus didaftarkan sebelum route dinamis lain kalau nanti ada GET /:id
-router.get("/low-stock", requireAuth, async (_req, res) => {
-  const products = await Product.find({
-    $expr: { $lte: ["$stock", "$minStock"] },
-  }).sort({ stock: 1 });
-  res.json({ products });
-});
+router.get(
+  "/low-stock",
+  requireAuth,
+  requireRole("admin"),
+  async (_req, res) => {
+    const products = await Product.find({
+      isActive: { $ne: false },
+      $expr: { $lte: ["$stock", "$minStock"] },
+    }).sort({ stock: 1 });
+    res.json({ products });
+  },
+);
 
 // GET /api/products
 router.get("/", requireAuth, async (_req, res) => {
-  const products = await Product.find().sort({ createdAt: -1, _id: -1 });
+  const products = await Product.find({ isActive: { $ne: false } }).sort({
+    createdAt: -1,
+    _id: -1,
+  });
   res.json({ products });
 });
 
@@ -111,12 +120,9 @@ router.patch("/:id", requireAuth, requireRole("admin"), async (req, res) => {
   }
 
   const product = await Product.findOneAndUpdate(
-    { _id: req.params.id },
+    { _id: req.params.id, isActive: { $ne: false } },
     updates,
-    {
-      returnDocument: "after",
-      runValidators: true,
-    },
+    { returnDocument: "after", runValidators: true },
   );
   if (!product) return res.status(404).json({ error: "Product not found" });
   res.json({ product });
@@ -128,7 +134,11 @@ router.delete("/:id", requireAuth, requireRole("admin"), async (req, res) => {
     return res.status(400).json({ error: "Invalid product id" });
   }
 
-  const product = await Product.findOneAndDelete({ _id: req.params.id });
+  const product = await Product.findOneAndUpdate(
+    { _id: req.params.id, isActive: { $ne: false } },
+    { isActive: false, deletedAt: new Date() },
+    { returnDocument: "after" },
+  );
   if (!product) return res.status(404).json({ error: "Product not found" });
   res.json({ product });
 });
