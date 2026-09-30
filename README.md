@@ -72,3 +72,7 @@ Buat file `.env` pada masing-masing folder (`backend` dan `frontend`) sesuai con
 2. Front End: Monica Anastasya Dantina (24/544527/TK/60525)
 3. Front End: Diaz Amantajati Susilo (24/545483/TK/60678)
 4. Back End: Galang Swastika Ramadhan (24/538251/TK/59692)
+
+### Laporan Milestone 1
+
+[Laporan 1](https://docs.google.com/document/d/1LyOVfVIEROlx-oHW2yb5tTA-lxhjgOywc-Ifj7P6hFg/edit?tab=t.wv455c9caus1)
