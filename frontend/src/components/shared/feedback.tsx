@@ -1,7 +1,7 @@
 "use client";
 import { type ReactNode } from "react";
 import { Chip } from "@heroui/react";
-import { Package } from "lucide-react";
+import { Package, Check, X } from "lucide-react";
 
 export function Badge({
   children,
@@ -28,6 +28,37 @@ export function Empty({
       <Package size={28} />
       <h3>{title}</h3>
       <p>{children || "Data akan muncul di sini setelah aktivitas pertama."}</p>
+    </div>
+  );
+}
+
+export function Toast({
+  message,
+  onDismiss,
+}: {
+  message: string;
+  onDismiss: () => void;
+}) {
+  if (!message) return null;
+  return (
+    <div
+      className="notification-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      <span className="notification-toast-icon" aria-hidden="true">
+        <Check size={17} />
+      </span>
+      <span className="notification-toast-message">{message}</span>
+      <button
+        type="button"
+        className="notification-toast-dismiss"
+        aria-label="Tutup notifikasi"
+        onClick={onDismiss}
+      >
+        <X size={16} />
+      </button>
     </div>
   );
 }

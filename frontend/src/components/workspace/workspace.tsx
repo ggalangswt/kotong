@@ -1,8 +1,8 @@
 "use client";
-import { Plus, Check, AlertCircle } from "lucide-react";
+import { Plus, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { type User } from "@/lib/types";
-import { Empty } from "@/components/shared/feedback";
+import { Empty, Toast } from "@/components/shared/feedback";
 import { useWorkspace } from "@/components/workspace/use-workspace";
 import { CashierSale } from "@/components/cashier/sale";
 import { ReceiptView } from "@/components/cashier/receipt";
@@ -26,6 +26,7 @@ export function Workspace({ path, user }: { path: string; user: User }) {
     subtitle,
     accountPage,
     toast,
+    setToast,
     loading,
     products,
     refresh,
@@ -66,12 +67,7 @@ export function Workspace({ path, user }: { path: string; user: User }) {
           </button>
         </div>
       )}
-      {toast && (
-        <div className="toast" role="status">
-          <Check size={18} />
-          {toast}
-        </div>
-      )}
+      <Toast message={toast} onDismiss={() => setToast("")} />
       {loading ? (
         <div className="skeleton-grid" aria-label="Memuat data">
           {[1, 2, 3, 4, 5, 6].map((n) => (

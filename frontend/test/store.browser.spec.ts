@@ -104,6 +104,22 @@ test("admin manages products, stock and cashier accounts", async ({ page }) => {
   await page.getByLabel("Kata sandi awal").fill("KotongTest123");
   await page.getByRole("button", { name: "Simpan", exact: true }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
+  const toast = page
+    .getByRole("status")
+    .filter({ hasText: "Akun kasir berhasil dibuat." });
+  await expect(toast).toBeVisible();
+  const position = await toast.boundingBox();
+  expect(position!.y).toBeLessThan(90);
+  expect(position!.x).toBeGreaterThan(720);
+  await expect(
+    page.getByRole("row").filter({ hasText: "rina@example.test" }),
+  ).toBeVisible();
+  await page.screenshot({
+    path: "test-results/notifikasi-kanan-atas.png",
+    fullPage: true,
+  });
+  await page.getByRole("button", { name: "Tutup notifikasi" }).click();
+  await expect(toast).toHaveCount(0);
   await page
     .getByRole("row")
     .filter({ hasText: "rina@example.test" })

@@ -839,20 +839,53 @@ tr:last-child td {
 .error button {
   font-size: 18px;
 }
-.toast {
+.notification-toast {
   position: fixed;
-  bottom: 25px;
-  right: 30px;
+  top: 24px;
+  right: 24px;
   z-index: 80;
   display: flex;
-  gap: 10px;
   align-items: center;
-  background: #1d2b20;
-  color: white;
-  border-radius: 9px;
-  padding: 16px 22px;
-  font-size: 12px;
-  box-shadow: 0 5px 20px #0001;
+  gap: 12px;
+  width: max-content;
+  max-width: min(380px, calc(100vw - 32px));
+  padding: 14px 16px;
+  background: var(--card);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--secondary);
+  border-radius: 10px;
+  box-shadow: 0 6px 24px #18542a12;
+}
+.notification-toast-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--surface-green);
+  color: var(--secondary);
+}
+.notification-toast-message {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.notification-toast-dismiss {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--muted-foreground);
+}
+.notification-toast-dismiss:hover {
+  background: var(--muted);
+  color: var(--foreground);
 }
 .kotong-dialog {
   background: #fff !important;
@@ -1258,7 +1291,7 @@ tr:last-child td {
   .page-header,
   .success-intro,
   .success-actions,
-  .toast,
+  .notification-toast,
   .error {
     display: none !important;
   }

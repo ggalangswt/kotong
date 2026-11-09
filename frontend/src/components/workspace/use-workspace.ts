@@ -326,6 +326,7 @@ export function useWorkspace({ path, user }: { path: string; user: User }) {
     subtitle,
     accountPage,
     toast,
+    setToast,
     loading,
     products,
     refresh,
