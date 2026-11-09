@@ -8,12 +8,15 @@ import { type User } from "@/lib/types";
 import { Brand } from "@/components/shared/brand";
 import { api } from "@/lib/api";
 import { Login } from "@/components/auth/login";
+import { Register } from "@/components/auth/register";
 import { AppShell } from "@/components/layout/app-shell";
 import { adminNav, cashierNav } from "@/components/layout/navigation";
 import { Workspace } from "@/components/workspace/workspace";
 
 export function StoreApp() {
   const path = usePathname();
+  const [segmentPath] = useState(path);
+  const active = path === segmentPath;
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
@@ -30,24 +33,37 @@ export function StoreApp() {
     }
   }, []);
   useEffect(() => {
+    if (!active) return;
     const expired = () => router.replace("/login");
     window.addEventListener("kotong-unauthorized", expired);
-    if (path !== "/login") void Promise.resolve().then(loadSession);
+    if (path !== "/login" && path !== "/register")
+      void Promise.resolve().then(loadSession);
     return () => window.removeEventListener("kotong-unauthorized", expired);
-  }, [loadSession, path, router]);
+  }, [active, loadSession, path, router]);
   useEffect(() => {
     if (
+      active &&
       user &&
       (path === "/" ||
         (user.role === "cashier" && path.startsWith("/admin")) ||
         (user.role === "admin" && path.startsWith("/kasir")))
     )
       router.replace(user.role === "admin" ? "/admin" : "/kasir/transaksi");
-  }, [user, path, router]);
+  }, [active, user, path, router]);
+  if (!active) return null;
   if (path === "/login")
     return (
       <Login
         onLogin={(u) => {
+          setUser(u);
+          router.replace(u.role === "admin" ? "/admin" : "/kasir/transaksi");
+        }}
+      />
+    );
+  if (path === "/register")
+    return (
+      <Register
+        onRegister={(u) => {
           setUser(u);
           router.replace(u.role === "admin" ? "/admin" : "/kasir/transaksi");
         }}

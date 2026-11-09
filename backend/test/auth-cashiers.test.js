@@ -44,14 +44,60 @@ test('Admin seed, authentication, cashier management, and access control', async
       adminToken = response.body.token;
     });
 
-    await t.test('login rejects wrong password and validates input', async () => {
+    await t.test('login rejects wrong password, role mismatch, and validates input', async () => {
       const wrong = await request(app).post('/api/auth/login').send({
         email: 'admin@example.com', password: 'wrong-password',
       });
       assert.equal(wrong.status, 401);
       assert.deepEqual(wrong.body, { error: 'Invalid email or password' });
+      const wrongRole = await request(app).post('/api/auth/login').send({
+        email: 'admin@example.com', password: 'admin-password-123', role: 'cashier',
+      });
+      assert.equal(wrongRole.status, 403);
+      assert.deepEqual(wrongRole.body, { error: 'Account is not a cashier' });
+      const invalidRole = await request(app).post('/api/auth/login').send({
+        email: 'admin@example.com', password: 'admin-password-123', role: 'owner',
+      });
+      assert.equal(invalidRole.status, 400);
       const missing = await request(app).post('/api/auth/login').send({ email: 'bad-email' });
       assert.equal(missing.status, 400);
+    });
+
+    await t.test('register creates an admin account, returns a token, and rejects duplicates/invalid fields', async () => {
+      const registered = await request(app).post('/api/auth/register').send({
+        name: ' Admin Baru ',
+        email: ' BARU@example.com ',
+        password: 'admin-baru-password',
+        role: 'cashier',
+      });
+      assert.equal(registered.status, 201);
+      assert.equal(registered.body.user.name, 'Admin Baru');
+      assert.equal(registered.body.user.email, 'baru@example.com');
+      assert.equal(registered.body.user.role, 'admin');
+      assert.equal(registered.body.user.status, 'active');
+      assert.equal(registered.body.user.passwordHash, undefined);
+      assert.equal(
+        jwt.verify(registered.body.token, process.env.JWT_SECRET).sub,
+        registered.body.user.id,
+      );
+
+      const stored = await User.findById(registered.body.user.id).select('+passwordHash');
+      assert.match(stored.passwordHash, /^\$argon2id\$/);
+
+      const duplicate = await request(app).post('/api/auth/register').send({
+        name: 'Admin Duplikat',
+        email: 'baru@example.com',
+        password: 'admin-baru-password',
+      });
+      assert.equal(duplicate.status, 409);
+      assert.deepEqual(duplicate.body, { error: 'Email already in use' });
+
+      const invalid = await request(app).post('/api/auth/register').send({
+        name: '',
+        email: 'not-an-email',
+        password: '123',
+      });
+      assert.equal(invalid.status, 400);
     });
 
     let cashierId;

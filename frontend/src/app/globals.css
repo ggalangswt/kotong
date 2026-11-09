@@ -1088,8 +1088,40 @@ tr:last-child td {
   color: #71806c;
   margin-top: 10px;
 }
+.role-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 5px;
+  margin-top: 22px;
+  background: #e9efe4;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.role-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #5d6d57;
+  background: transparent;
+  border: 0;
+}
+.role-option:hover:not(.active) {
+  color: #18542a;
+  background: #dfe8d9;
+}
+.role-option.active {
+  background: #18542a;
+  color: #fff;
+  box-shadow: 0 2px 6px #18542a1f;
+}
 .login-form form {
-  margin-top: 30px;
+  margin-top: 24px;
 }
 .login-form .field {
   margin-bottom: 20px;
@@ -1100,6 +1132,15 @@ tr:last-child td {
 .login-help {
   text-align: center;
   margin-top: 22px !important;
+}
+.login-help a {
+  color: #18542a;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.login-help a:hover {
+  color: #0f3a1c;
 }
 .loading,
 .connection {
