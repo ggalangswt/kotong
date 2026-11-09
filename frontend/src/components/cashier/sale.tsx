@@ -207,7 +207,7 @@ export function CashierSale({
             </strong>
           </div>
           <Button
-            className="primary wide"
+            className="w-full"
             disabled={
               busy ||
               !cartRows.length ||

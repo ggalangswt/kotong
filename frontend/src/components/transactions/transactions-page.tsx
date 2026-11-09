@@ -52,7 +52,7 @@ export function TransactionsPage({
         ? [cashiers.find((c) => c.id === s.cashierId)?.name || "Kasir"]
         : []),
       <strong key="total">{rupiah(s.totalAmount)}</strong>,
-      <Button variant="ghost" key="detail" onClick={() => detail(s)}>
+      <Button size="sm" variant="ghost" key="detail" onClick={() => detail(s)}>
         Detail
         <ArrowUpRight size={15} />
       </Button>,

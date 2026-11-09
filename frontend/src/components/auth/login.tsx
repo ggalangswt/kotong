@@ -84,7 +84,7 @@ export function Login({ onLogin }: { onLogin: (user: User) => void }) {
                 {error}
               </p>
             )}
-            <Button type="submit" className="primary wide" disabled={busy}>
+            <Button type="submit" className="w-full" disabled={busy}>
               {busy ? "Sedang masuk…" : "Masuk"}
               <ArrowUpRight size={17} />
             </Button>

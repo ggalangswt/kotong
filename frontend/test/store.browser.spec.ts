@@ -27,6 +27,14 @@ test("cashier sale, receipt and private history work against isolated MongoDB", 
     page.getByRole("heading", { name: "Penjualan berhasil!" }),
   ).toBeVisible();
   await expect(page.locator(".receipt-money")).toContainText("15.000");
+  const printButton = await page
+    .getByRole("button", { name: "Cetak Struk", exact: true })
+    .boundingBox();
+  const newSaleButton = await page
+    .getByRole("button", { name: "Transaksi Baru", exact: true })
+    .boundingBox();
+  expect(printButton!.height).toBe(newSaleButton!.height);
+  expect(printButton!.y).toBe(newSaleButton!.y);
   await page.screenshot({
     path: "test-results/kasir-berhasil.png",
     fullPage: true,

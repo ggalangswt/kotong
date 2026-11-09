@@ -277,20 +277,6 @@ nav {
   font-size: 12px;
   margin-top: 7px;
 }
-.primary {
-  background: var(--secondary) !important;
-  color: #fff !important;
-  border-radius: 8px;
-  min-height: 42px;
-  padding-inline: 17px;
-  font-size: 12px !important;
-}
-.primary:hover {
-  background: #123f20 !important;
-}
-.wide {
-  width: 100%;
-}
 .panel {
   background: #fff;
   border: 1px solid #dfe7da;
@@ -676,9 +662,6 @@ tr:last-child td {
   display: flex;
   gap: 4px;
 }
-.row-actions button {
-  font-size: 11px;
-}
 .empty {
   text-align: center;
   padding: 35px 15px;
@@ -1038,9 +1021,6 @@ tr:last-child td {
   font-size: 11px;
   color: #71806c;
 }
-.pagination button {
-  font-size: 11px;
-}
 .login-page {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1115,7 +1095,7 @@ tr:last-child td {
 .login-form .field {
   margin-bottom: 20px;
 }
-.login-form .primary {
+.login-form form > [data-slot="button"] {
   margin-top: 8px;
 }
 .login-help {

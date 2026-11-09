@@ -39,7 +39,6 @@ export function ReportsPage({
           setEnd={setEnd}
         />
         <Button
-          className="primary"
           disabled={!start || !end || start > end}
           onClick={() => setRange({ start, end })}
         >

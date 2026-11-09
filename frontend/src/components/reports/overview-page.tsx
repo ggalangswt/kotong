@@ -103,7 +103,12 @@ export function OverviewPage({
               dateTime(s.date),
               cashiers.find((c) => c.id === s.cashierId)?.name || "Kasir",
               rupiah(s.totalAmount),
-              <Button key="d" variant="ghost" onClick={() => detail(s)}>
+              <Button
+                size="sm"
+                key="d"
+                variant="ghost"
+                onClick={() => detail(s)}
+              >
                 Detail
                 <ArrowUpRight size={14} />
               </Button>,

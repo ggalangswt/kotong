@@ -42,6 +42,7 @@ export function DataTable({
             {rows.length}
           </span>
           <Button
+            size="sm"
             variant="outline"
             disabled={!current}
             onClick={() => setPage(current - 1)}
@@ -49,6 +50,7 @@ export function DataTable({
             Sebelumnya
           </Button>
           <Button
+            size="sm"
             variant="outline"
             disabled={(current + 1) * 8 >= rows.length}
             onClick={() => setPage(current + 1)}

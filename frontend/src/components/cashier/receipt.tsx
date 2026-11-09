@@ -52,10 +52,7 @@ export function ReceiptView({ receipt, router }: Props) {
               <Printer size={17} />
               Cetak Struk
             </Button>
-            <Button
-              className="primary"
-              onClick={() => router.push("/kasir/transaksi")}
-            >
+            <Button onClick={() => router.push("/kasir/transaksi")}>
               <Plus size={17} />
               Transaksi Baru
             </Button>

@@ -113,6 +113,7 @@ export function ProductStockPage({
             {productPage ? (
               <>
                 <Button
+                  size="icon-sm"
                   variant="ghost"
                   aria-label={`Edit ${p.name}`}
                   onClick={() => open("product", p)}
@@ -120,6 +121,7 @@ export function ProductStockPage({
                   <Pencil size={15} />
                 </Button>
                 <Button
+                  size="icon-sm"
                   variant="ghost"
                   aria-label={`Hapus ${p.name}`}
                   onClick={() => open("remove", p)}
@@ -129,10 +131,15 @@ export function ProductStockPage({
               </>
             ) : (
               <>
-                <Button variant="outline" onClick={() => open("stock", p)}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => open("stock", p)}
+                >
                   Sesuaikan
                 </Button>
                 <Button
+                  size="icon-sm"
                   variant="ghost"
                   aria-label={`Riwayat ${p.name}`}
                   onClick={() => history(p)}

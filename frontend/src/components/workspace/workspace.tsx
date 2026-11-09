@@ -46,13 +46,13 @@ export function Workspace({ path, user }: { path: string; user: User }) {
           <p>{subtitle}</p>
         </div>
         {productPage && (
-          <Button className="primary" onClick={() => open("product")}>
+          <Button onClick={() => open("product")}>
             <Plus size={17} />
             Tambah Produk
           </Button>
         )}
         {accountPage && (
-          <Button className="primary" onClick={() => open("cashier")}>
+          <Button onClick={() => open("cashier")}>
             <Plus size={17} />
             Tambah Akun Kasir
           </Button>

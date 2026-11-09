@@ -26,6 +26,7 @@ export function CashiersPage({ cashiers, setSelectedUser, setDialog }: Props) {
             {c.status === "active" ? "Aktif" : "Nonaktif"}
           </Badge>,
           <Button
+            size="sm"
             variant="outline"
             key="a"
             onClick={() => {

@@ -85,7 +85,6 @@ export function CashierStatus({
           Batal
         </Button>
         <Button
-          className="primary"
           disabled={busy}
           onClick={() =>
             mutate(

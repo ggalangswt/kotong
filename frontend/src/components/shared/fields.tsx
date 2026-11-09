@@ -28,7 +28,7 @@ export function FormActions({
       <Button type="button" variant="outline" disabled={busy} onClick={cancel}>
         Batal
       </Button>
-      <Button type="submit" className="primary" disabled={busy}>
+      <Button type="submit" disabled={busy}>
         {busy ? "Menyimpan…" : "Simpan"}
       </Button>
     </div>
