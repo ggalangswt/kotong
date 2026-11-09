@@ -23,12 +23,12 @@ export function OverviewPage({
   return (
     <>
       <div className="summary-strip">
-        <div className="summary lavender">
+        <div className="summary summary-green">
           <span>Omzet hari ini</span>
           <strong>{rupiah(todayReport.revenue)}</strong>
           <small>Penjualan tunai yang tercatat</small>
         </div>
-        <div className="summary blue">
+        <div className="summary summary-sage">
           <span>Transaksi hari ini</span>
           <strong>
             {todayReport.sales.length}
@@ -36,7 +36,7 @@ export function OverviewPage({
           </strong>
           <small>{day(now)} · WIB</small>
         </div>
-        <div className="summary cream">
+        <div className="summary summary-yellow">
           <span>Stok perlu perhatian</span>
           <strong>
             {low.length}

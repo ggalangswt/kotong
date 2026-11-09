@@ -58,6 +58,7 @@ test("admin manages products, stock and cashier accounts", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Ringkasan Toko" }),
   ).toBeVisible();
+  await expect(page.locator(".summary-strip")).toBeVisible();
   await page.screenshot({
     path: "test-results/admin-ringkasan.png",
     fullPage: true,

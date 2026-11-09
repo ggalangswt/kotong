@@ -1,6 +1,6 @@
 # Frontend KOTONG
 
-Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui (Base UI), HeroUI, dan Plus Jakarta Sans lokal. Antarmuka berbahasa Indonesia untuk admin dan kasir, dengan light mode lavender, biru, krem, serta charcoal.
+Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui (Base UI), HeroUI, dan Plus Jakarta Sans lokal. Antarmuka berbahasa Indonesia untuk admin dan kasir, dengan light mode putih kehijauan, forest green (`#18542A`), serta aksen kuning (`#F3D63B`).
 
 ## Menjalankan
 
