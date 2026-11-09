@@ -19,7 +19,7 @@ Isi `SESSION_SECRET` dengan hasil perintah terakhir (minimal 32 karakter). Isi `
 npm run dev
 ```
 
-Buka http://localhost:3000/login. Gunakan akun dari backend; tidak ada akun demo dalam aplikasi. Admin awal dibuat melalui `npm run seed:admin` di backend sesuai dokumentasi backend. Hentikan server dengan Ctrl+C.
+Buka http://localhost:3000 untuk landing page publik. Tombol Masuk mengarah ke http://localhost:3000/login. Gunakan akun dari backend; tidak ada akun demo dalam aplikasi. Admin awal dibuat melalui `npm run seed:admin` di backend sesuai dokumentasi backend. Hentikan server dengan Ctrl+C.
 
 ## Pemeriksaan
 
@@ -48,6 +48,7 @@ Tes browser membutuhkan Google Chrome dan dependensi backend yang sudah terpasan
 - `components/store-app.tsx`: sesi pengguna, pengalihan peran, dan titik masuk aplikasi.
 - `components/layout/`: sidebar, header aplikasi, dan konfigurasi navigasi.
 - `components/shared/`: identitas KOTONG, status, empty state, tabel, field, filter tanggal, serta aksi form yang digunakan bersama.
+- `components/landing/`: landing page publik dengan contoh transaksi, fitur, alur penggunaan, dan informasi peran.
 - `components/auth/`, `cashier/`, `products/`, `stock/`, `transactions/`, `reports/`, dan `cashiers/`: tampilan dan form masing-masing fitur.
 - `components/workspace/`: pengelolaan state, pemilihan halaman, dan wadah dialog bersama. Tampilan fitur menerima props bertipe sesuai data yang dipakai.
 - `lib/api.ts`: pemanggilan API browser dan penanganan error/sesi kedaluwarsa. `lib/business.ts` berisi perhitungan uang dan laporan.

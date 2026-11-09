@@ -157,3 +157,42 @@ test("gateway rejects unauthenticated and cross-origin mutations", async ({
   const unknown = await request.get("/api/unknown");
   expect(unknown.status()).toBe(404);
 });
+
+test("landing page is public, responsive and leads to login", async ({
+  page,
+}) => {
+  const sessionCalls: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/api/session"))
+      sessionCalls.push(request.url());
+  });
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", { name: "Jualan sehari-hari, lebih tertata." }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Contoh tampilan", { exact: true }),
+  ).toBeVisible();
+  expect(sessionCalls).toHaveLength(0);
+  await page.screenshot({
+    path: "test-results/landing-desktop.png",
+    fullPage: true,
+  });
+  await page.getByRole("link", { name: "Lihat cara kerjanya" }).click();
+  await expect(page).toHaveURL(/#cara-kerja$/);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBeTruthy();
+  await page.screenshot({
+    path: "test-results/landing-mobile.png",
+    fullPage: true,
+  });
+  await page.getByRole("link", { name: "Masuk", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Siap buka toko?" }),
+  ).toBeVisible();
+});
