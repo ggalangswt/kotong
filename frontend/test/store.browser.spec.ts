@@ -112,7 +112,10 @@ test("admin manages products, stock and cashier accounts", async ({ page }) => {
   await page.getByRole("link", { name: "Akun Kasir", exact: true }).click();
   await page.getByRole("button", { name: "Tambah Akun Kasir" }).click();
   await page.getByLabel("Nama kasir", { exact: true }).fill("Rina");
-  await page.getByLabel("Email", { exact: true }).fill("rina@example.test");
+  await page
+    .getByRole("dialog")
+    .getByLabel("Email", { exact: true })
+    .fill("rina@example.test");
   await page.getByLabel("Kata sandi awal").fill("KotongTest123");
   await page.getByRole("button", { name: "Simpan", exact: true }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
@@ -217,10 +220,14 @@ test("admin registration auto-logs in and login separates admin vs cashier roles
   await expect(
     page.getByRole("heading", { name: "Buat akun Admin" }),
   ).toBeVisible();
-  await page.getByLabel("Nama lengkap").fill("Admin Baru Berkah");
-  await page.getByLabel("Email", { exact: true }).fill("adminbaru@example.test");
-  await page.getByLabel("Kata sandi", { exact: true }).fill("KotongTest123");
-  await page
+  // Next keeps the previous /login page mounted but hidden (Activity), so scope to the visible form.
+  const form = page.locator("form").filter({ visible: true });
+  await form.getByLabel("Nama lengkap").fill("Admin Baru Berkah");
+  await form
+    .getByLabel("Email", { exact: true })
+    .fill("adminbaru@example.test");
+  await form.getByLabel("Kata sandi", { exact: true }).fill("KotongTest123");
+  await form
     .getByLabel("Konfirmasi kata sandi", { exact: true })
     .fill("KotongTest123");
   await page

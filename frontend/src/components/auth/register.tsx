@@ -1,14 +1,17 @@
 "use client";
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Store, ArrowUpRight, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { type User } from "@/lib/types";
 import { Brand } from "@/components/shared/brand";
 import { Field } from "@/components/shared/fields";
 import { api } from "@/lib/api";
+import { homeFor } from "@/components/layout/navigation";
 
-export function Register({ onRegister }: { onRegister: (user: User) => void }) {
+export function Register() {
+  const router = useRouter();
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -40,7 +43,7 @@ export function Register({ onRegister }: { onRegister: (user: User) => void }) {
       try {
         sessionStorage.removeItem("kotong-receipt");
       } catch {}
-      onRegister(data.user);
+      router.replace(homeFor(data.user.role));
     } catch (e) {
       setError((e as Error).message);
     } finally {

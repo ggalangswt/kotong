@@ -1,6 +1,7 @@
 "use client";
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ShoppingBasket,
   ArrowUpRight,
@@ -13,8 +14,10 @@ import { type User } from "@/lib/types";
 import { Brand } from "@/components/shared/brand";
 import { Field } from "@/components/shared/fields";
 import { api } from "@/lib/api";
+import { homeFor } from "@/components/layout/navigation";
 
-export function Login({ onLogin }: { onLogin: (user: User) => void }) {
+export function Login() {
+  const router = useRouter();
   const [role, setRole] = useState<"admin" | "cashier">("admin");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -32,7 +35,7 @@ export function Login({ onLogin }: { onLogin: (user: User) => void }) {
       try {
         sessionStorage.removeItem("kotong-receipt");
       } catch {}
-      onLogin(data.user);
+      router.replace(homeFor(data.user.role));
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -71,10 +74,16 @@ export function Login({ onLogin }: { onLogin: (user: User) => void }) {
               ? "Masuk sebagai Admin untuk mengelola produk, stok, laporan, dan kasir."
               : "Masuk dengan akun Kasir yang diberikan oleh admin toko."}
           </p>
-          <div className="role-switch" role="group" aria-label="Pilih peran masuk">
+          <div
+            className="role-switch"
+            role="group"
+            aria-label="Pilih peran masuk"
+          >
             <button
               type="button"
-              className={role === "admin" ? "role-option active" : "role-option"}
+              className={
+                role === "admin" ? "role-option active" : "role-option"
+              }
               aria-pressed={role === "admin"}
               onClick={() => {
                 setRole("admin");
