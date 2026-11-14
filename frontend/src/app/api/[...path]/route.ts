@@ -39,14 +39,16 @@ async function handle(
     jar.delete(cookieName);
     return Response.json({ ok: true });
   }
-  const login = path === "auth/login" && request.method === "POST";
+  const auth =
+    (path === "auth/login" || path === "auth/register") &&
+    request.method === "POST";
   const allowed =
     (request.method === "GET" &&
       /^(session|products|products\/[a-f\d]{24}\/stock-movements|transactions(?:\/[a-f\d]{24})?|cashiers)$/.test(
         path,
       )) ||
     (request.method === "POST" &&
-      /^(auth\/login|products|products\/[a-f\d]{24}\/stock-adjustments|transactions|cashiers)$/.test(
+      /^(auth\/login|auth\/register|products|products\/[a-f\d]{24}\/stock-adjustments|transactions|cashiers)$/.test(
         path,
       )) ||
     (request.method === "PATCH" &&
@@ -55,7 +57,7 @@ async function handle(
   if (!allowed)
     return Response.json({ error: "Tidak ditemukan." }, { status: 404 });
   const session = unpack(jar.get(cookieName)?.value);
-  if (!login && !session)
+  if (!auth && !session)
     return Response.json({ error: "Silakan masuk kembali." }, { status: 401 });
   try {
     const backend = process.env.KOTONG_API_URL || "http://localhost:4000";
@@ -74,7 +76,7 @@ async function handle(
     );
     const data = await response.json();
     if (response.status === 401) jar.delete(cookieName);
-    if (login && response.ok) {
+    if (auth && response.ok) {
       const body = Buffer.from(JSON.stringify(data)).toString("base64url");
       jar.set(cookieName, `${body}.${sign(body)}`, {
         httpOnly: true,
@@ -85,7 +87,7 @@ async function handle(
       });
       return Response.json(
         { user: data.user },
-        { headers: { "Cache-Control": "no-store" } },
+        { status: response.status, headers: { "Cache-Control": "no-store" } },
       );
     }
     if (path === "session" && response.ok)

@@ -1,13 +1,24 @@
 "use client";
 import { useState, type FormEvent } from "react";
-import { ShoppingBasket, ArrowUpRight, AlertCircle } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  ShoppingBasket,
+  ArrowUpRight,
+  AlertCircle,
+  Store,
+  Users,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { type User } from "@/lib/types";
 import { Brand } from "@/components/shared/brand";
 import { Field } from "@/components/shared/fields";
 import { api } from "@/lib/api";
+import { homeFor } from "@/components/layout/navigation";
 
-export function Login({ onLogin }: { onLogin: (user: User) => void }) {
+export function Login() {
+  const router = useRouter();
+  const [role, setRole] = useState<"admin" | "cashier">("admin");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   async function submit(e: FormEvent<HTMLFormElement>) {
@@ -19,11 +30,12 @@ export function Login({ onLogin }: { onLogin: (user: User) => void }) {
       const data = await api<{ user: User }>("auth/login", "POST", {
         email: f.get("email"),
         password: f.get("password"),
+        role,
       });
       try {
         sessionStorage.removeItem("kotong-receipt");
       } catch {}
-      onLogin(data.user);
+      router.replace(homeFor(data.user.role));
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -57,14 +69,56 @@ export function Login({ onLogin }: { onLogin: (user: User) => void }) {
         <div>
           <span className="eyebrow">SELAMAT DATANG KEMBALI</span>
           <h2>Siap buka toko?</h2>
-          <p>Masuk dengan akun yang diberikan admin toko.</p>
+          <p>
+            {role === "admin"
+              ? "Masuk sebagai Admin untuk mengelola produk, stok, laporan, dan kasir."
+              : "Masuk dengan akun Kasir yang diberikan oleh admin toko."}
+          </p>
+          <div
+            className="role-switch"
+            role="group"
+            aria-label="Pilih peran masuk"
+          >
+            <button
+              type="button"
+              className={
+                role === "admin" ? "role-option active" : "role-option"
+              }
+              aria-pressed={role === "admin"}
+              onClick={() => {
+                setRole("admin");
+                setError("");
+              }}
+            >
+              <Store size={15} />
+              Admin
+            </button>
+            <button
+              type="button"
+              className={
+                role === "cashier" ? "role-option active" : "role-option"
+              }
+              aria-pressed={role === "cashier"}
+              onClick={() => {
+                setRole("cashier");
+                setError("");
+              }}
+            >
+              <Users size={15} />
+              Kasir
+            </button>
+          </div>
           <form onSubmit={submit}>
             <Field label="Email">
               <input
                 name="email"
                 type="email"
                 autoComplete="username"
-                placeholder="nama@tokoberkah.id"
+                placeholder={
+                  role === "admin"
+                    ? "admin@tokoberkah.id"
+                    : "kasir@tokoberkah.id"
+                }
                 required
                 maxLength={254}
               />
@@ -81,7 +135,7 @@ export function Login({ onLogin }: { onLogin: (user: User) => void }) {
             {error && (
               <p role="alert" className="error">
                 <AlertCircle size={16} />
-                {error}
+                <span>{error}</span>
               </p>
             )}
             <Button type="submit" className="w-full" disabled={busy}>
@@ -89,7 +143,16 @@ export function Login({ onLogin }: { onLogin: (user: User) => void }) {
               <ArrowUpRight size={17} />
             </Button>
           </form>
-          <p className="login-help">Kesulitan masuk? Hubungi admin toko.</p>
+          {role === "admin" ? (
+            <p className="login-help">
+              Belum punya akun admin?{" "}
+              <Link href="/register">Daftar akun Admin</Link>
+            </p>
+          ) : (
+            <p className="login-help">
+              Akun kasir dibuat oleh admin toko. Kesulitan masuk? Hubungi admin.
+            </p>
+          )}
         </div>
       </section>
     </main>

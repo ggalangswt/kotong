@@ -1,6 +1,10 @@
 import { test, expect, type Page } from "@playwright/test";
 async function login(page: Page, email: string) {
   await page.goto("/login");
+  const isAdmin = email.startsWith("admin");
+  await page
+    .getByRole("button", { name: isAdmin ? "Admin" : "Kasir", exact: true })
+    .click();
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Kata sandi", { exact: true }).fill("KotongTest123");
   await page.getByRole("button", { name: "Masuk", exact: true }).click();
@@ -108,7 +112,10 @@ test("admin manages products, stock and cashier accounts", async ({ page }) => {
   await page.getByRole("link", { name: "Akun Kasir", exact: true }).click();
   await page.getByRole("button", { name: "Tambah Akun Kasir" }).click();
   await page.getByLabel("Nama kasir", { exact: true }).fill("Rina");
-  await page.getByLabel("Email", { exact: true }).fill("rina@example.test");
+  await page
+    .getByRole("dialog")
+    .getByLabel("Email", { exact: true })
+    .fill("rina@example.test");
   await page.getByLabel("Kata sandi awal").fill("KotongTest123");
   await page.getByRole("button", { name: "Simpan", exact: true }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
@@ -194,5 +201,39 @@ test("landing page is public, responsive and leads to login", async ({
   await page.getByRole("link", { name: "Masuk", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Siap buka toko?" }),
+  ).toBeVisible();
+});
+
+test("admin registration auto-logs in and login separates admin vs cashier roles", async ({
+  page,
+}) => {
+  await page.goto("/login");
+  await page.getByRole("button", { name: "Admin", exact: true }).click();
+  await page.getByLabel("Email", { exact: true }).fill("sari@example.test");
+  await page.getByLabel("Kata sandi", { exact: true }).fill("KotongTest123");
+  await page.getByRole("button", { name: "Masuk", exact: true }).click();
+  await expect(page.locator(".error")).toContainText(
+    "Akun ini bukan akun Admin",
+  );
+
+  await page.getByRole("link", { name: "Daftar akun Admin" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Buat akun Admin" }),
+  ).toBeVisible();
+  // Next keeps the previous /login page mounted but hidden (Activity), so scope to the visible form.
+  const form = page.locator("form").filter({ visible: true });
+  await form.getByLabel("Nama lengkap").fill("Admin Baru Berkah");
+  await form
+    .getByLabel("Email", { exact: true })
+    .fill("adminbaru@example.test");
+  await form.getByLabel("Kata sandi", { exact: true }).fill("KotongTest123");
+  await form
+    .getByLabel("Konfirmasi kata sandi", { exact: true })
+    .fill("KotongTest123");
+  await page
+    .getByRole("button", { name: "Daftar sebagai Admin", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Ringkasan Toko" }),
   ).toBeVisible();
 });

@@ -22,3 +22,8 @@ export const cashierNav = [
   ["Transaksi", "/kasir/transaksi", ShoppingBasket],
   ["Riwayat Saya", "/kasir/riwayat", History],
 ] as const;
+
+export type Role = "admin" | "cashier";
+export function homeFor(role: Role) {
+  return role === "admin" ? "/admin" : "/kasir/transaksi";
+}
