@@ -1,9 +1,10 @@
 "use client";
 import { type ReactNode } from "react";
 import Link from "next/link";
-import { LogOut, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { type User } from "@/lib/types";
 import { Brand } from "@/components/shared/brand";
+import { AccountMenu } from "@/components/layout/account-menu";
 import { adminNav, cashierNav } from "@/components/layout/navigation";
 import { storeInitial, useStore } from "@/components/session/store-context";
 
@@ -48,17 +49,7 @@ export function AppShell({
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <div className="staff">
-            <span>{user.name.slice(0, 1)}</span>
-            <div>
-              <strong>{user.name}</strong>
-              <small>{user.role === "admin" ? "Admin toko" : "Kasir"}</small>
-            </div>
-          </div>
-          <button className="logout" onClick={onLogout}>
-            <LogOut size={16} />
-            Keluar
-          </button>
+          <AccountMenu user={user} path={path} onLogout={onLogout} />
         </div>
       </aside>
       <main className="main">

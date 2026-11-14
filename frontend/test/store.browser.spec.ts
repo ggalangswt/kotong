@@ -9,6 +9,11 @@ async function login(page: Page, email: string) {
   await page.getByLabel("Kata sandi", { exact: true }).fill("KotongTest123");
   await page.getByRole("button", { name: "Masuk", exact: true }).click();
 }
+async function logout(page: Page) {
+  await page.getByRole("button", { name: /^Menu akun/ }).click();
+  await page.getByRole("menuitem", { name: "Keluar" }).click();
+  await expect(page).toHaveURL(/\/login$/);
+}
 test("cashier sale, receipt and private history work against isolated MongoDB", async ({
   page,
 }) => {
@@ -60,7 +65,7 @@ test("cashier sale, receipt and private history work against isolated MongoDB", 
   });
   await page.goto("/admin");
   await expect(page).toHaveURL(/kasir\/transaksi/);
-  await page.getByRole("button", { name: "Keluar" }).click();
+  await logout(page);
   await login(page, "budi@example.test");
   await page.getByRole("link", { name: "Riwayat Saya" }).click();
   await expect(page.getByText("Tidak ada hasil")).toBeVisible();
@@ -236,4 +241,48 @@ test("admin registration auto-logs in and login separates admin vs cashier roles
   await expect(
     page.getByRole("heading", { name: "Ringkasan Toko" }),
   ).toBeVisible();
+});
+
+test("admin renames the store from the account menu and cashiers see it", async ({
+  page,
+}) => {
+  await login(page, "admin@example.test");
+  const sidebar = page.locator(".sidebar");
+  await expect(sidebar.locator(".store-label")).toContainText("Toko Saya");
+  await expect(page.getByRole("link", { name: "Pengaturan Toko" })).toHaveCount(
+    0,
+  );
+
+  await page.getByRole("button", { name: /^Menu akun/ }).click();
+  const items = page.getByRole("menuitem");
+  await expect(items).toHaveText(["Pengaturan Toko", "Keluar"]);
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("menu")).toHaveCount(0);
+
+  await page.getByRole("button", { name: /^Menu akun/ }).click();
+  await page.getByRole("menuitem", { name: "Pengaturan Toko" }).click();
+  await expect(page).toHaveURL(/\/admin\/toko$/);
+  await expect(page.getByRole("menu")).toHaveCount(0);
+
+  await page.getByLabel("Nama toko").fill("Toko Uji Coba");
+  await page.getByLabel("Jenis toko").fill("Warung");
+  await page.getByRole("button", { name: "Simpan", exact: true }).click();
+  await expect(
+    page
+      .getByRole("status")
+      .filter({ hasText: "Profil toko berhasil disimpan." }),
+  ).toBeVisible();
+  await expect(sidebar.locator(".store-label")).toContainText("Toko Uji Coba");
+  await expect(sidebar.locator(".store-avatar")).toHaveText("T");
+  await expect(page.locator(".topbar")).toContainText("Toko Uji Coba");
+
+  await logout(page);
+  await login(page, "sari@example.test");
+  await expect(page.locator(".sidebar .store-label")).toContainText(
+    "Toko Uji Coba",
+  );
+  await page.getByRole("button", { name: /^Menu akun/ }).click();
+  await expect(page.getByRole("menuitem")).toHaveText(["Keluar"]);
+  await page.goto("/admin/toko");
+  await expect(page).toHaveURL(/kasir\/transaksi/);
 });

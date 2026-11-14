@@ -117,6 +117,7 @@ a svg {
   padding: 29px 18px 20px;
   display: flex;
   flex-direction: column;
+  z-index: 30;
 }
 .brand {
   display: flex;
@@ -197,14 +198,83 @@ nav {
   margin-top: auto;
   padding-top: 30px;
 }
+.account-menu {
+  position: relative;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
 .staff {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 8px;
-  border-top: 1px solid var(--border);
+  width: 100%;
+  padding: 10px 8px;
+  border-radius: 10px;
+  text-align: left;
+  cursor: pointer;
 }
-.staff > span,
+.staff:hover,
+.staff[aria-expanded="true"] {
+  background: var(--muted);
+}
+.staff:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+.staff-text {
+  flex: 1;
+  min-width: 0;
+}
+.staff-text strong {
+  overflow-wrap: anywhere;
+}
+.staff-chevron {
+  flex-shrink: 0;
+  color: var(--muted-foreground);
+}
+.account-popover {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  min-width: 180px;
+  z-index: 20;
+  display: grid;
+  gap: 2px;
+  padding: 6px;
+  background: var(--popover);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgb(29 43 32 / 0.12);
+}
+.account-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--foreground);
+  text-align: left;
+  cursor: pointer;
+}
+.account-item:hover,
+.account-item:focus-visible,
+.account-item.active {
+  background: var(--muted);
+  outline: none;
+}
+.account-item.danger {
+  color: var(--destructive);
+}
+.account-item + .account-item.danger {
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+  margin-top: 4px;
+  padding-top: 11px;
+}
+.staff-avatar,
 .person-avatar {
   width: 32px;
   height: 32px;
@@ -213,14 +283,6 @@ nav {
   display: grid;
   place-items: center;
   font-weight: 600;
-}
-.logout {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #687564;
-  font-size: 12px;
-  padding: 8px;
 }
 .main {
   margin-left: 218px;
@@ -1244,9 +1306,13 @@ tr:last-child td {
   .nav-label,
   .nav-item span,
   .nav-item > svg:last-child,
-  .staff,
-  .logout {
+  .staff-text,
+  .staff-chevron {
     display: none;
+  }
+  .staff {
+    justify-content: center;
+    padding: 8px 0;
   }
   .sidebar nav {
     margin-top: 35px;
