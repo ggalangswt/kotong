@@ -130,9 +130,6 @@ a svg {
 .brand-icon {
   width: 35px;
   height: 35px;
-  background: #18542a;
-  border-radius: 10px;
-  color: #f3d63b;
   display: grid;
   place-items: center;
 }
@@ -1109,9 +1106,6 @@ tr:last-child td {
   color: #5e7357;
   font-size: 14px;
   line-height: 1.9;
-}
-.login-story > .brand .brand-icon {
-  background: #18542a;
 }
 .login-sample {
   background: #fbf3c6;
