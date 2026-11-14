@@ -1,11 +1,11 @@
 "use client";
-import { Store } from "lucide-react";
+import { BrandMark } from "@/components/shared/brand-mark";
 
 export function Brand() {
   return (
     <div className="brand">
       <span className="brand-icon">
-        <Store size={21} />
+        <BrandMark />
       </span>
       KOTONG<span className="brand-dot">.</span>
     </div>
