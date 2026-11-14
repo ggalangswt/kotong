@@ -1,10 +1,12 @@
 "use client";
 import { type ReactNode } from "react";
 import Link from "next/link";
-import { LogOut, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { type User } from "@/lib/types";
 import { Brand } from "@/components/shared/brand";
+import { AccountMenu } from "@/components/layout/account-menu";
 import { adminNav, cashierNav } from "@/components/layout/navigation";
+import { storeInitial, useStore } from "@/components/session/store-context";
 
 export function AppShell({
   user,
@@ -18,15 +20,18 @@ export function AppShell({
   onLogout: () => Promise<void>;
 }) {
   const nav = user.role === "admin" ? adminNav : cashierNav;
+  const { store, isLoaded } = useStore();
   return (
     <div className="app-shell">
       <aside className="sidebar">
         <Brand />
-        <div className="store-label">
-          <span className="store-avatar">B</span>
+        <div className="store-label" aria-busy={!isLoaded}>
+          <span className="store-avatar" aria-hidden="true">
+            {storeInitial(store.name)}
+          </span>
           <div>
-            <strong>Toko Berkah</strong>
-            <small>Toko kelontong</small>
+            <strong>{store.name}</strong>
+            {store.type && <small>{store.type}</small>}
           </div>
         </div>
         <p className="nav-label">RUANG KERJA</p>
@@ -44,23 +49,13 @@ export function AppShell({
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <div className="staff">
-            <span>{user.name.slice(0, 1)}</span>
-            <div>
-              <strong>{user.name}</strong>
-              <small>{user.role === "admin" ? "Admin toko" : "Kasir"}</small>
-            </div>
-          </div>
-          <button className="logout" onClick={onLogout}>
-            <LogOut size={16} />
-            Keluar
-          </button>
+          <AccountMenu user={user} path={path} onLogout={onLogout} />
         </div>
       </aside>
       <main className="main">
         <div className="topbar">
           <span>
-            Toko Berkah <ChevronRight size={13} />{" "}
+            {store.name} <ChevronRight size={13} />{" "}
             {user.role === "admin" ? "Pengelolaan toko" : "Ruang kasir"}
           </span>
           <span>

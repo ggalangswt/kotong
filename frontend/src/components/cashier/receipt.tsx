@@ -7,9 +7,11 @@ import { Brand } from "@/components/shared/brand";
 import { Empty } from "@/components/shared/feedback";
 import { SaleDetail } from "@/components/transactions/sale-detail";
 import { type WorkspaceState } from "@/components/workspace/use-workspace";
+import { useStore } from "@/components/session/store-context";
 
 type Props = Pick<WorkspaceState, "receipt" | "router">;
 export function ReceiptView({ receipt, router }: Props) {
+  const { store } = useStore();
   return (
     <section className="success-layout">
       {receipt ? (
@@ -24,7 +26,7 @@ export function ReceiptView({ receipt, router }: Props) {
           <div className="receipt panel">
             <Brand />
             <p>
-              Toko Berkah
+              {store.name}
               <br />
               Struk pembayaran tunai
             </p>

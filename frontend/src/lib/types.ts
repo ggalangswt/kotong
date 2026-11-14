@@ -35,3 +35,8 @@ export type Movement = {
   stockAfter: number;
   type: string;
 };
+export type Store = {
+  name: string;
+  type: string;
+  updatedAt?: string;
+};

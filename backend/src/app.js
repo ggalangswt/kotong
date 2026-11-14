@@ -5,6 +5,7 @@ const transactionRoutes = require("./routes/transactions");
 const reportRoutes = require("./routes/reports");
 const { requireAuth, requireRole } = require("./middleware/auth");
 const productRoutes = require("./routes/Products");
+const storeRoutes = require("./routes/store");
 
 const app = express();
 const notImplemented = (_req, res) =>
@@ -14,6 +15,7 @@ app.use(express.json({ limit: "1mb" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/cashiers", requireAuth, requireRole("admin"), cashierRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/store", requireAuth, storeRoutes);
 
 // Stub routes remain available for the modules owned by the other team members.
 app.get(

@@ -13,6 +13,7 @@ import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Brand } from "@/components/shared/brand";
 import { AppShell } from "@/components/layout/app-shell";
+import { StoreProvider } from "@/components/session/store-context";
 import { homeFor, type Role } from "@/components/layout/navigation";
 import { api } from "@/lib/api";
 import { type User } from "@/lib/types";
@@ -90,9 +91,11 @@ export function RoleGate({
 
   return (
     <SessionUserContext.Provider value={user}>
-      <AppShell user={user} path={path} onLogout={logout}>
-        {children}
-      </AppShell>
+      <StoreProvider>
+        <AppShell user={user} path={path} onLogout={logout}>
+          {children}
+        </AppShell>
+      </StoreProvider>
     </SessionUserContext.Provider>
   );
 }

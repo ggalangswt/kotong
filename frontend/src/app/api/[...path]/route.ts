@@ -44,7 +44,7 @@ async function handle(
     request.method === "POST";
   const allowed =
     (request.method === "GET" &&
-      /^(session|products|products\/[a-f\d]{24}\/stock-movements|transactions(?:\/[a-f\d]{24})?|cashiers)$/.test(
+      /^(session|products|products\/[a-f\d]{24}\/stock-movements|transactions(?:\/[a-f\d]{24})?|cashiers|store)$/.test(
         path,
       )) ||
     (request.method === "POST" &&
@@ -52,7 +52,9 @@ async function handle(
         path,
       )) ||
     (request.method === "PATCH" &&
-      /^(products\/[a-f\d]{24}|cashiers\/[a-f\d]{24}\/status)$/.test(path)) ||
+      /^(store|products\/[a-f\d]{24}|cashiers\/[a-f\d]{24}\/status)$/.test(
+        path,
+      )) ||
     (request.method === "DELETE" && /^products\/[a-f\d]{24}$/.test(path));
   if (!allowed)
     return Response.json({ error: "Tidak ditemukan." }, { status: 404 });
