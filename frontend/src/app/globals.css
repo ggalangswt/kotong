@@ -1372,3 +1372,11 @@ tr:last-child td {
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
 }
+.store-settings {
+  max-width: 520px;
+}
+.store-preview {
+  margin: 0 0 22px;
+  padding-top: 0;
+  border-top: 0;
+}

@@ -31,6 +31,10 @@ export async function api<T>(
             "Nama, email, dan kata sandi (8–128 karakter) wajib diisi dengan benar.",
           Forbidden: "Anda tidak memiliki akses untuk tindakan ini.",
           "Product not found": "Produk sudah tidak tersedia.",
+          "Store name must be 1-100 characters":
+            "Nama toko wajib diisi, maksimal 100 karakter.",
+          "Store type must be 1-60 characters":
+            "Jenis toko wajib diisi, maksimal 60 karakter.",
         } as Record<string, string>
       )[data.error] ||
         (response.status === 429

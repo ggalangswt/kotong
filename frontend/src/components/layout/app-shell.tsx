@@ -5,6 +5,7 @@ import { LogOut, ChevronRight } from "lucide-react";
 import { type User } from "@/lib/types";
 import { Brand } from "@/components/shared/brand";
 import { adminNav, cashierNav } from "@/components/layout/navigation";
+import { storeInitial, useStore } from "@/components/session/store-context";
 
 export function AppShell({
   user,
@@ -18,15 +19,18 @@ export function AppShell({
   onLogout: () => Promise<void>;
 }) {
   const nav = user.role === "admin" ? adminNav : cashierNav;
+  const { store, isLoaded } = useStore();
   return (
     <div className="app-shell">
       <aside className="sidebar">
         <Brand />
-        <div className="store-label">
-          <span className="store-avatar">B</span>
+        <div className="store-label" aria-busy={!isLoaded}>
+          <span className="store-avatar" aria-hidden="true">
+            {storeInitial(store.name)}
+          </span>
           <div>
-            <strong>Toko Berkah</strong>
-            <small>Toko kelontong</small>
+            <strong>{store.name}</strong>
+            {store.type && <small>{store.type}</small>}
           </div>
         </div>
         <p className="nav-label">RUANG KERJA</p>
@@ -60,7 +64,7 @@ export function AppShell({
       <main className="main">
         <div className="topbar">
           <span>
-            Toko Berkah <ChevronRight size={13} />{" "}
+            {store.name} <ChevronRight size={13} />{" "}
             {user.role === "admin" ? "Pengelolaan toko" : "Ruang kasir"}
           </span>
           <span>
