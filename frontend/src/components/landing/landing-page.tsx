@@ -141,9 +141,6 @@ export function LandingPage() {
       <main id="konten">
         <section className={"landing-hero"} aria-labelledby="hero-title">
           <div className={"landing-heroCopy"}>
-            <p className={"landing-eyebrow"}>
-              <span /> DIBUAT UNTUK TOKO KELONTONG
-            </p>
             <h1 id="hero-title">
               Jualan sehari-hari,
               <br />
@@ -181,9 +178,6 @@ export function LandingPage() {
           aria-labelledby="features-title"
         >
           <div className={"landing-sectionHeader"}>
-            <p className={"landing-eyebrow"}>
-              SATU TEMPAT, URUSAN TOKO LEBIH RAPI
-            </p>
             <h2 id="features-title">Yang penting untuk toko Anda.</h2>
             <p>
               Fokus melayani pelanggan. Catatan penjualan dan persediaan ikut
@@ -209,7 +203,6 @@ export function LandingPage() {
           aria-labelledby="workflow-title"
         >
           <div className={"landing-workflowIntro"}>
-            <p className={"landing-eyebrow"}>DARI BELANJA SAMPAI TERCATAT</p>
             <h2 id="workflow-title">
               Alurnya sederhana.
               <br />
@@ -255,16 +248,13 @@ export function LandingPage() {
           aria-labelledby="roles-title"
         >
           <div className={"landing-sectionHeader"}>
-            <p className={"landing-eyebrow"}>
-              KERJA TIM, AKSES SESUAI KEBUTUHAN
-            </p>
             <h2 id="roles-title">Satu toko. Dua ruang kerja.</h2>
             <p>Admin mengelola toko, kasir fokus melayani penjualan.</p>
           </div>
           <div className={"landing-roleGrid"}>
             <article className={"landing-adminRole"}>
               <span className={"landing-roleLabel"}>
-                <Store size={18} /> UNTUK ADMIN
+                <Store size={18} /> ADMIN
               </span>
               <h3>
                 Pegang kendali
@@ -288,7 +278,7 @@ export function LandingPage() {
             </article>
             <article className={"landing-cashierRole"}>
               <span className={"landing-roleLabel"}>
-                <Users size={18} /> UNTUK KASIR
+                <Users size={18} /> KASIR
               </span>
               <h3>
                 Layani pelanggan
@@ -315,9 +305,6 @@ export function LandingPage() {
         </section>
         <section className={"landing-closing"}>
           <div>
-            <p className={"landing-eyebrow"}>
-              SIAP MELAYANI PELANGGAN BERIKUTNYA?
-            </p>
             <h2>Buka toko. Mulai dari KOTONG.</h2>
           </div>
           <Link href="/login" className={buttonVariants({ size: "lg" })}>
