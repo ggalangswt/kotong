@@ -15,6 +15,7 @@ import { Brand } from "@/components/shared/brand";
 import { buttonVariants } from "@/components/ui/button";
 import { rupiah } from "@/lib/business";
 import "./landing.css";
+import { Navbar } from "./navbar";
 
 const benefits = [
   {
@@ -121,23 +122,8 @@ function SalePreview() {
 
 export function LandingPage() {
   return (
-    <div className={"landing"}>
-      <a className={"landing-skipLink"} href="#konten">
-        Lewati ke konten
-      </a>
-      <header className={"landing-header"}>
-        <Link href="/" aria-label="KOTONG — Beranda">
-          <Brand />
-        </Link>
-        <nav aria-label="Navigasi utama" className={"landing-navigation"}>
-          <a href="#fitur">Fitur</a>
-          <a href="#cara-kerja">Cara kerja</a>
-          <a href="#peran">Untuk tim toko</a>
-        </nav>
-        <Link href="/login" className={buttonVariants({ variant: "outline" })}>
-          Masuk <ArrowUpRight size={16} />
-        </Link>
-      </header>
+    <div className={"landing mt-5"}>
+      <Navbar />
       <main id="konten">
         <section className={"landing-hero"} aria-labelledby="hero-title">
           <div className={"landing-heroCopy"}>
