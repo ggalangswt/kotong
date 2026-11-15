@@ -39,9 +39,6 @@ export function Workspace({ path, user }: { path: string; user: User }) {
     <div className="workspace">
       <header className="page-header">
         <div>
-          <span className="eyebrow">
-            {user.role === "admin" ? "KELOLA TOKO" : "LAYANI PELANGGAN"}
-          </span>
           <h1>{title}</h1>
           <p>{subtitle}</p>
         </div>
