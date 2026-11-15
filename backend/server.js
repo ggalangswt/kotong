@@ -1,7 +1,7 @@
 require('dotenv').config();
 
-const mongoose = require('mongoose');
 const app = require('./src/app');
+const connectDb = require('./src/db');
 
 async function start() {
   const { MONGODB_URI, JWT_SECRET } = process.env;
@@ -15,7 +15,7 @@ async function start() {
     throw new Error('PORT must be a valid TCP port');
   }
 
-  await mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 10000 });
+  await connectDb();
   app.listen(port, () => console.log(`Kotong backend listening on port ${port}`));
 }
 
