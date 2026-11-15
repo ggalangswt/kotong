@@ -1093,7 +1093,7 @@ tr:last-child td {
   padding: 45px 55px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
 }
 .login-story h1 {
   font-size: 57px;
@@ -1138,6 +1138,7 @@ tr:last-child td {
 .login-form h2 {
   font-size: 31px;
   letter-spacing: -1px;
+  text-align: center;
 }
 .login-form p {
   font-size: 12px;
