@@ -1,4 +1,5 @@
 const express = require("express");
+const connectDb = require("./db");
 const authRoutes = require("./routes/auth");
 const cashierRoutes = require("./routes/cashiers");
 const transactionRoutes = require("./routes/transactions");
@@ -12,6 +13,10 @@ const notImplemented = (_req, res) =>
   res.status(501).json({ error: "Not implemented" });
 
 app.use(express.json({ limit: "1mb" }));
+app.use(async (_req, _res, next) => {
+  await connectDb();
+  next();
+});
 app.use("/api/auth", authRoutes);
 app.use("/api/cashiers", requireAuth, requireRole("admin"), cashierRoutes);
 app.use("/api/products", productRoutes);
