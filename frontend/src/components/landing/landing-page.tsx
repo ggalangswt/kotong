@@ -140,16 +140,19 @@ export function LandingPage() {
               <Link href="/login" className={buttonVariants({ size: "lg" })}>
                 Masuk ke KOTONG <ArrowUpRight size={17} />
               </Link>
-              <a href="#cara-kerja" className={"landing-textLink"}>
+              <Link
+                href="#cara-kerja"
+                className={buttonVariants({ size: "lg", variant: "secondary" })}
+              >
                 Lihat cara kerjanya <ArrowDown size={16} />
-              </a>
+              </Link>
             </div>
             <div className={"landing-heroNote"}>
               <span>
-                <Check size={14} /> Transaksi tunai
+                <Check size={14} /> Real Time
               </span>
               <span>
-                <Check size={14} /> Persediaan tercatat
+                <Check size={14} /> Terintegrasi
               </span>
               <span>
                 <Check size={14} /> Akses sesuai peran
@@ -239,7 +242,7 @@ export function LandingPage() {
           </div>
           <div className={"landing-roleGrid"}>
             <article className={"landing-adminRole"}>
-              <span className={"landing-roleLabel"}>
+              <span className={"landing-roleLabel font-bold"}>
                 <Store size={18} /> ADMIN
               </span>
               <h3>
@@ -263,7 +266,7 @@ export function LandingPage() {
               </ul>
             </article>
             <article className={"landing-cashierRole"}>
-              <span className={"landing-roleLabel"}>
+              <span className={"landing-roleLabel font-bold"}>
                 <Users size={18} /> KASIR
               </span>
               <h3>
@@ -285,7 +288,7 @@ export function LandingPage() {
                   Lihat riwayat transaksi sendiri.
                 </li>
               </ul>
-              <p>Akun kasir dibuat oleh admin toko.</p>
+              <p>*Akun kasir dibuat oleh admin toko.</p>
             </article>
           </div>
         </section>
@@ -298,12 +301,11 @@ export function LandingPage() {
           </Link>
         </section>
       </main>
-      <footer className={"landing-footer"}>
+      <footer className={"landing-footer justify-center"}>
         <Link href="/" aria-label="Kembali ke beranda KOTONG">
           <Brand />
         </Link>
         <p>Teman sehari-hari toko kelontong.</p>
-        <a href="#konten">Kembali ke atas ↑</a>
       </footer>
     </div>
   );
