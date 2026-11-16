@@ -2,7 +2,11 @@
 import { Button as HeroButton } from "@heroui/react";
 import {
   ShoppingBasket,
+  Wheat,
   Package,
+  CupSoda,
+  House,
+  Soup,
   Search,
   Plus,
   Minus,
@@ -35,6 +39,39 @@ type Props = Pick<
   | "invalidCart"
   | "checkout"
 >;
+
+function categoryKey(category: string) {
+  const normalized = category
+    .trim()
+    .toLocaleLowerCase("id-ID")
+    .replace(/\s+/g, "-");
+
+  switch (normalized) {
+    case "sembako":
+    case "minuman":
+    case "kebutuhan-rumah":
+    case "mie-instan":
+      return normalized;
+    default:
+      return "other";
+  }
+}
+
+function CategoryIcon({ category }: { category: string }) {
+  switch (categoryKey(category)) {
+    case "sembako":
+      return <Wheat size={28} />;
+    case "minuman":
+      return <CupSoda size={28} />;
+    case "kebutuhan-rumah":
+      return <House size={28} />;
+    case "mie-instan":
+      return <Soup size={28} />;
+    default:
+      return <Package size={28} />;
+  }
+}
+
 export function CashierSale({
   search,
   setSearch,
@@ -84,15 +121,15 @@ export function CashierSale({
           <span>{filtered.length} produk tersedia</span>
         </div>
         <div className="product-grid">
-          {filtered.map((p, i) => (
+          {filtered.map((p) => (
             <button
               key={p._id}
-              className={`product-card tone-${i % 4}`}
+              className={`product-card category-${categoryKey(p.category)}`}
               disabled={!p.stock}
               onClick={() => quantity(p, 1)}
             >
               <div className="product-symbol">
-                <Package size={28} />
+                <CategoryIcon category={p.category} />
                 <span>{p.category}</span>
               </div>
               <h3>{p.name}</h3>

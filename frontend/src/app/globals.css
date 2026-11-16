@@ -452,17 +452,25 @@ nav {
   color: #4a784d;
   margin-bottom: 14px;
 }
-.tone-1 .product-symbol {
+.category-sembako .product-symbol {
   background: #edf3df;
   color: #60803e;
 }
-.tone-2 .product-symbol {
+.category-minuman .product-symbol {
   background: #fbf3c6;
   color: #967c20;
 }
-.tone-3 .product-symbol {
+.category-kebutuhan-rumah .product-symbol {
   background: #f1f4e8;
   color: #77865e;
+}
+.category-mie-instan .product-symbol {
+  background: #f9e5d8;
+  color: #a65d36;
+}
+.category-other .product-symbol {
+  background: #eceff1;
+  color: #68747b;
 }
 .product-symbol > span {
   font-size: 9px;
