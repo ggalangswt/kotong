@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 async function login(page: Page, email: string) {
   await page.goto("/login");
   const isAdmin = email.startsWith("admin");
@@ -114,6 +115,16 @@ test("admin manages products, stock and cashier accounts", async ({ page }) => {
     path: "test-results/admin-laporan.png",
     fullPage: true,
   });
+  await page.getByLabel("Tanggal mulai").fill("2020-01-01");
+  await page.getByLabel("Tanggal akhir").fill("2020-01-02");
+  await page.getByRole("button", { name: "Terapkan" }).click();
+  const downloadEvent = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Ekspor CSV" }).click();
+  const download = await downloadEvent;
+  expect(download.suggestedFilename()).toBe("laporan-kotong-2020-01-01-2020-01-02.csv");
+  expect(await readFile(await download.path(), "utf8")).toContain(
+    '"Total periode","2020-01-01 s.d. 2020-01-02","",0,"",0',
+  );
   await page.getByRole("link", { name: "Akun Kasir", exact: true }).click();
   await page.getByRole("button", { name: "Tambah Akun Kasir" }).click();
   await page.getByLabel("Nama kasir", { exact: true }).fill("Rina");

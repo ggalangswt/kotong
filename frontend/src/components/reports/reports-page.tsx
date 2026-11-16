@@ -1,6 +1,9 @@
 "use client";
+import { useState } from "react";
+import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { rupiah } from "@/lib/business";
+import { apiResponse } from "@/lib/api";
 import { Badge } from "@/components/shared/feedback";
 import { DateRange } from "@/components/shared/fields";
 import { DataTable } from "@/components/shared/data-table";
@@ -25,6 +28,30 @@ export function ReportsPage({
   selectedReport,
   range,
 }: Props) {
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState("");
+
+  async function exportReport() {
+    setExporting(true);
+    setExportError("");
+    try {
+      const query = new URLSearchParams(range);
+      const response = await apiResponse(`reports/export?${query}`);
+      const url = URL.createObjectURL(await response.blob());
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `laporan-kotong-${range.start}-${range.end}.csv`;
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (error) {
+      setExportError(
+        error instanceof Error ? error.message : "Gagal mengunduh laporan.",
+      );
+    } finally {
+      setExporting(false);
+    }
+  }
+
   return (
     <>
       <section className="panel report-filter">
@@ -50,10 +77,21 @@ export function ReportsPage({
           <span>Omzet pada periode ini</span>
           <h2>{rupiah(selectedReport.revenue)}</h2>
         </div>
-        <span>
-          {selectedReport.sales.length} transaksi · {range.start} — {range.end}
-        </span>
+        <div className="flex flex-wrap items-center gap-4">
+          <span>
+            {selectedReport.sales.length} transaksi · {range.start} — {range.end}
+          </span>
+          <Button variant="outline" disabled={exporting} onClick={exportReport}>
+            <Download aria-hidden="true" />
+            {exporting ? "Menyiapkan CSV…" : "Ekspor CSV"}
+          </Button>
+        </div>
       </div>
+      {exportError && (
+        <p className="error" role="alert">
+          {exportError}
+        </p>
+      )}
       <div className="report-grid">
         <section className="panel">
           <div className="section-line">

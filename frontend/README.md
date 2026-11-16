@@ -40,7 +40,8 @@ Tes browser membutuhkan Google Chrome dan dependensi backend yang sudah terpasan
 - Laporan periode dihitung dari transaksi yang dikembalikan API, memakai batas hari Asia/Jakarta. Untuk volume besar, diperlukan API laporan dengan filter dan pagination server.
 - Stok menipis mengikuti backend: stok kurang dari atau sama dengan minimum. UI menerima stok akhir lalu mengirim selisih ke API. Penyesuaian bersamaan belum dilindungi pemeriksaan versi stok.
 - Produk baru memiliki stok nol. Isi persediaan lewat halaman Stok. Menghapus produk tidak menghapus transaksi historis.
-- Catatan/pelaku penyesuaian, QRIS, ekspor laporan, dan perubahan backend belum termasuk. Struk dapat dicetak melalui dialog cetak browser.
+- Tombol **Ekspor CSV** di halaman Laporan mengunduh total periode, penjualan harian, dan produk terlaris untuk periode WIB yang sudah diterapkan.
+- Catatan/pelaku penyesuaian dan QRIS belum termasuk. Struk dapat dicetak melalui dialog cetak browser.
 - Request pembayaran tidak dicoba ulang otomatis. Bila koneksi terputus saat pembayaran, periksa riwayat sebelum mencoba lagi karena backend belum menyediakan idempotency key.
 
 ## Struktur kode frontend

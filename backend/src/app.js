@@ -69,12 +69,6 @@ app.use(
   requireRole("admin"),
   reportRoutes,
 );
-app.get(
-  "/api/reports/export",
-  requireAuth,
-  requireRole("admin"),
-  notImplemented,
-);
 app.post("/api/payments/webhook", notImplemented);
 
 app.use((_req, res) => res.status(404).json({ error: "Not found" }));
