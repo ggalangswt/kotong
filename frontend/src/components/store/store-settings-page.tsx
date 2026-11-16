@@ -41,7 +41,6 @@ export function StoreSettingsPage() {
     <div className="workspace">
       <header className="page-header">
         <div>
-          <span className="eyebrow">KELOLA TOKO</span>
           <h1>Pengaturan Toko</h1>
           <p>Nama ini tampil di sidebar dan struk pembayaran.</p>
         </div>

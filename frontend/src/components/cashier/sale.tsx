@@ -140,7 +140,7 @@ export function CashierSale({
                       })
                     }
                   >
-                    <Trash2 size={15} />
+                    <Trash2 className="cart-remove-icon" size={15} />
                   </button>
                 </div>
                 <p>{rupiah(p.price)} / barang</p>

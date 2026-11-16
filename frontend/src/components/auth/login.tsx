@@ -47,7 +47,6 @@ export function Login() {
       <section className="login-story">
         <Brand />
         <div>
-          <span className="eyebrow">TEMAN SEHARI-HARI TOKO ANDA</span>
           <h1>
             Jualan lancar.
             <br />
@@ -63,11 +62,9 @@ export function Login() {
             <span>Dari kebutuhan kecil sampai belanja bulanan.</span>
           </div>
         </div>
-        <small>KOTONG · Kasir & persediaan</small>
       </section>
       <section className="login-form">
         <div>
-          <span className="eyebrow">SELAMAT DATANG KEMBALI</span>
           <h2>Siap buka toko?</h2>
           <p>
             {role === "admin"

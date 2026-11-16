@@ -77,15 +77,6 @@ export function ReportsPage({
           <span>Omzet pada periode ini</span>
           <h2>{rupiah(selectedReport.revenue)}</h2>
         </div>
-        <div className="flex flex-wrap items-center gap-4">
-          <span>
-            {selectedReport.sales.length} transaksi · {range.start} — {range.end}
-          </span>
-          <Button variant="outline" disabled={exporting} onClick={exportReport}>
-            <Download aria-hidden="true" />
-            {exporting ? "Menyiapkan CSV…" : "Ekspor CSV"}
-          </Button>
-        </div>
       </div>
       {exportError && (
         <p className="error" role="alert">
@@ -121,6 +112,16 @@ export function ReportsPage({
             ])}
           />
         </section>
+        <div className="flex flex-wrap items-center gap-4">
+          {/* <span>
+            {selectedReport.sales.length} transaksi · {range.start} —{" "}
+            {range.end}
+          </span> */}
+          <Button disabled={exporting} onClick={exportReport}>
+            <Download aria-hidden="true" />
+            {exporting ? "Menyiapkan CSV…" : "Ekspor CSV"}
+          </Button>
+        </div>
       </div>
     </>
   );

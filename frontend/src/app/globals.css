@@ -118,6 +118,9 @@ a svg {
   display: flex;
   flex-direction: column;
   z-index: 30;
+  border-top-right-radius: 40px;
+  border-bottom-right-radius: 40px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
 }
 .brand {
   display: flex;
@@ -544,6 +547,9 @@ nav {
   color: #7e8b78;
   padding: 4px;
 }
+.cart-item-title .cart-remove-icon {
+  color: #dc2626;
+}
 .cart-item p {
   font-size: 10px;
   color: #74826e;
@@ -715,6 +721,10 @@ tr:last-child td {
 .stock-badge.low {
   background: #fbf3c6 !important;
   color: #886d19 !important;
+}
+.stock-badge.out {
+  background: #fee2e2 !important;
+  color: #b91c1c !important;
 }
 .row-actions {
   display: flex;
@@ -1093,7 +1103,7 @@ tr:last-child td {
   padding: 45px 55px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
 }
 .login-story h1 {
   font-size: 57px;
@@ -1138,6 +1148,7 @@ tr:last-child td {
 .login-form h2 {
   font-size: 31px;
   letter-spacing: -1px;
+  text-align: center;
 }
 .login-form p {
   font-size: 12px;

@@ -34,7 +34,6 @@ export function AppShell({
             {store.type && <small>{store.type}</small>}
           </div>
         </div>
-        <p className="nav-label">RUANG KERJA</p>
         <nav>
           {nav.map(([title, url, Icon]) => (
             <Link

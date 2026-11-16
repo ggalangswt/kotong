@@ -6,15 +6,14 @@ import { Package, Check, X } from "lucide-react";
 export function Badge({
   children,
   low = false,
+  out = false,
 }: {
   children: ReactNode;
   low?: boolean;
+  out?: boolean;
 }) {
-  return (
-    <Chip className={low ? "stock-badge low" : "stock-badge"} size="sm">
-      {children}
-    </Chip>
-  );
+  const variant = out ? "out" : low ? "low" : "";
+  return <Chip className={`stock-badge ${variant}`} size="sm">{children}</Chip>;
 }
 export function Empty({
   title = "Belum ada data",
