@@ -29,7 +29,11 @@ Semua error berbentuk `{ "error": "pesan" }`. Kode utama: `400` input salah, `40
 
 Impor `{ requireAuth, requireRole }` dari `src/middleware/auth.js`. Pasang berurutan, misalnya `router.post('/', requireAuth, requireRole('admin'), handler)`. Setelah `requireAuth`, `req.user` berisi `{ id, name, email, role }` dari database terkini. Riwayat transaksi membatasi query Kasir ke `req.user.id`; Admin dapat melihat seluruh riwayat. Kasir dapat melihat produk dan membuat transaksi. Admin mengelola Kasir, produk, stok, dan laporan.
 
-Route laporan masih berupa stub di `src/app.js`. Saat menggantinya, pertahankan middleware akses. Route `/api/products/low-stock` harus didaftarkan sebelum `/api/products/:id`.
+Route `/api/products/low-stock` harus didaftarkan sebelum `/api/products/:id`.
+
+## Ekspor laporan
+
+`GET /api/reports/export?start=2026-11-01&end=2026-11-07` khusus Admin. Kedua tanggal wajib memakai format `YYYY-MM-DD` dan dihitung inklusif dalam WIB. Respons `200` mengunduh CSV berisi total periode, penjualan harian, dan produk terlaris. Periode kosong menghasilkan total nol. Tanggal yang tidak valid atau terbalik menghasilkan `400`.
 
 ## Transaksi tunai
 

@@ -28,9 +28,11 @@ async function handle(
   context: { params: Promise<{ path: string[] }> },
 ) {
   const path = (await context.params).path.join("/");
+  const requestUrl = new URL(request.url);
+  const reportExport = path === "reports/export" && request.method === "GET";
   const jar = await cookies();
   const mutation = request.method !== "GET";
-  if (mutation && request.headers.get("origin") !== new URL(request.url).origin)
+  if (mutation && request.headers.get("origin") !== requestUrl.origin)
     return Response.json(
       { error: "Permintaan tidak diizinkan." },
       { status: 403 },
@@ -43,6 +45,7 @@ async function handle(
     (path === "auth/login" || path === "auth/register") &&
     request.method === "POST";
   const allowed =
+    reportExport ||
     (request.method === "GET" &&
       /^(session|products|products\/[a-f\d]{24}\/stock-movements|transactions(?:\/[a-f\d]{24})?|cashiers|store)$/.test(
         path,
@@ -63,8 +66,9 @@ async function handle(
     return Response.json({ error: "Silakan masuk kembali." }, { status: 401 });
   try {
     const backend = process.env.KOTONG_API_URL || "http://localhost:4000";
+    const query = reportExport ? requestUrl.search : "";
     const response = await fetch(
-      `${backend}/api/${path === "session" ? "products" : path}`,
+      `${backend}/api/${path === "session" ? "products" : path}${query}`,
       {
         method: request.method,
         headers: {
@@ -76,6 +80,14 @@ async function handle(
         signal: AbortSignal.timeout(15000),
       },
     );
+    if (reportExport && response.ok) {
+      const headers = new Headers({ "Cache-Control": "no-store" });
+      for (const name of ["Content-Type", "Content-Disposition"]) {
+        const value = response.headers.get(name);
+        if (value) headers.set(name, value);
+      }
+      return new Response(response.body, { headers, status: response.status });
+    }
     const data = await response.json();
     if (response.status === 401) jar.delete(cookieName);
     if (auth && response.ok) {
