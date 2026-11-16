@@ -102,7 +102,11 @@ export function ProductStockPage({
           ...(productPage ? [rupiah(p.price)] : []),
           `${p.stock} unit`,
           `${p.minStock} unit`,
-          <Badge key="badge" low={p.stock <= p.minStock}>
+          <Badge
+            key="badge"
+            low={p.stock <= p.minStock}
+            out={p.stock === 0}
+          >
             {p.stock === 0
               ? "Habis"
               : p.stock <= p.minStock

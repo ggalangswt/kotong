@@ -718,6 +718,10 @@ tr:last-child td {
   background: #fbf3c6 !important;
   color: #886d19 !important;
 }
+.stock-badge.out {
+  background: #fee2e2 !important;
+  color: #b91c1c !important;
+}
 .row-actions {
   display: flex;
   gap: 4px;
