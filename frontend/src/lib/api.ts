@@ -1,3 +1,13 @@
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+    readonly code?: string,
+  ) {
+    super(message);
+  }
+}
+
 export async function apiResponse(
   path: string,
   method = "GET",
@@ -16,9 +26,13 @@ export async function apiResponse(
     )
       window.dispatchEvent(new Event("kotong-unauthorized"));
     const data = await response.json();
-    throw new Error(
+    throw new ApiError(
       (
         {
+          "Payment provider unavailable":
+            "Layanan QRIS sedang tidak tersedia. Gunakan pembayaran tunai atau coba lagi.",
+          "Transaction is not pending":
+            "Status pembayaran sudah berubah. Periksa Riwayat Saya.",
           "Insufficient stock":
             "Stok tidak mencukupi. Periksa kembali keranjang.",
           "Invalid email or password": "Email atau kata sandi tidak sesuai.",
@@ -41,6 +55,8 @@ export async function apiResponse(
         (response.status === 429
           ? "Terlalu banyak percobaan. Silakan coba lagi nanti."
           : data.error || "Permintaan gagal. Coba kembali."),
+      response.status,
+      data.error,
     );
   }
   return response;

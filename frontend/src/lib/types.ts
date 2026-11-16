@@ -25,8 +25,17 @@ export type Sale = {
     subtotal: number;
   }[];
   totalAmount: number;
-  paymentMethod: string;
+  paymentMethod: PaymentMethod;
+  status?: SaleStatus;
+  payment?: {
+    qrString?: string;
+    expiresAt?: string;
+    paidAt?: string;
+  };
 };
+export type PaymentMethod = "cash" | "qris";
+export type SaleStatus =
+  "paid" | "pending" | "expired" | "cancelled" | "failed";
 export type Movement = {
   _id: string;
   createdAt: string;

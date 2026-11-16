@@ -7,6 +7,7 @@ const reportRoutes = require("./routes/reports");
 const { requireAuth, requireRole } = require("./middleware/auth");
 const productRoutes = require("./routes/Products");
 const storeRoutes = require("./routes/store");
+const paymentRoutes = require("./routes/payments");
 
 const app = express();
 const notImplemented = (_req, res) =>
@@ -69,7 +70,7 @@ app.use(
   requireRole("admin"),
   reportRoutes,
 );
-app.post("/api/payments/webhook", notImplemented);
+app.use("/api/payments", paymentRoutes);
 
 app.use((_req, res) => res.status(404).json({ error: "Not found" }));
 app.use((error, _req, res, _next) => {

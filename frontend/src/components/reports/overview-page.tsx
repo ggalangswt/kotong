@@ -26,7 +26,7 @@ export function OverviewPage({
         <div className="summary summary-green">
           <span>Omzet hari ini</span>
           <strong>{rupiah(todayReport.revenue)}</strong>
-          <small>Penjualan tunai yang tercatat</small>
+          <small>Penjualan lunas yang tercatat</small>
         </div>
         <div className="summary summary-sage">
           <span>Transaksi hari ini</span>

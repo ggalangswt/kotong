@@ -12,12 +12,25 @@ import {
   Minus,
   Trash2,
   ArrowUpRight,
+  Banknote,
+  QrCode,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { rupiah } from "@/lib/business";
+import { cashSuggestions, rupiah, shortRupiah } from "@/lib/business";
 import { Empty } from "@/components/shared/feedback";
 import { Field } from "@/components/shared/fields";
 import { type WorkspaceState } from "@/components/workspace/use-workspace";
+import { QrisDialog } from "@/components/cashier/qris-dialog";
+import { type PaymentMethod } from "@/lib/types";
+
+const PAYMENT_OPTIONS: {
+  value: PaymentMethod;
+  label: string;
+  icon: typeof Banknote;
+}[] = [
+  { value: "cash", label: "Tunai", icon: Banknote },
+  { value: "qris", label: "QRIS", icon: QrCode },
+];
 
 type Props = Pick<
   WorkspaceState,
@@ -36,8 +49,15 @@ type Props = Pick<
   | "setCash"
   | "changeAmount"
   | "busy"
-  | "invalidCart"
   | "checkout"
+  | "canCheckout"
+  | "paymentMethod"
+  | "setPaymentMethod"
+  | "pendingSale"
+  | "cancel"
+  | "simulate"
+  | "qrisBusy"
+  | "qrisError"
 >;
 
 function categoryKey(category: string) {
@@ -88,9 +108,13 @@ export function CashierSale({
   setCash,
   changeAmount,
   busy,
-  invalidCart,
   checkout,
+  canCheckout,
+  paymentMethod,
+  setPaymentMethod,
+  ...qris
 }: Props) {
+  const isQris = paymentMethod === "qris";
   return (
     <div className="pos-layout">
       <section>
@@ -222,46 +246,101 @@ export function CashierSale({
             <span>Total pembayaran</span>
             <strong>{rupiah(total)}</strong>
           </div>
-          <Field label="Uang diterima">
-            <div className="money-input">
-              <span>Rp</span>
-              <input
-                type="number"
-                min={0}
-                step={100}
-                value={cash}
-                onChange={(e) => setCash(e.target.value)}
-                placeholder="0"
-              />
-            </div>
-          </Field>
-          <div className="change-line">
-            <span>Kembalian</span>
-            <strong>
-              {cash && changeAmount === null
-                ? "Uang belum cukup"
-                : rupiah(changeAmount || 0)}
-            </strong>
+          <div
+            className="payment-methods"
+            role="radiogroup"
+            aria-label="Metode pembayaran"
+          >
+            {PAYMENT_OPTIONS.map(({ value, label, icon: Icon }) => (
+              <button
+                key={value}
+                type="button"
+                role="radio"
+                aria-checked={paymentMethod === value}
+                className={
+                  paymentMethod === value
+                    ? "payment-method active"
+                    : "payment-method"
+                }
+                onClick={() => setPaymentMethod(value)}
+              >
+                <Icon size={16} />
+                {label}
+              </button>
+            ))}
           </div>
+          {isQris ? (
+            <p className="qris-hint">
+              Kode QRIS akan muncul setelah transaksi dibuat. Stok ditahan
+              sampai pembayaran berhasil.
+            </p>
+          ) : (
+            <>
+              <Field label="Uang diterima">
+                <div className="money-input">
+                  <span>Rp</span>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    min={0}
+                    step={100}
+                    value={cash}
+                    onChange={(e) => setCash(e.target.value)}
+                    placeholder="0"
+                    aria-label="Uang diterima"
+                  />
+                </div>
+              </Field>
+              {total > 0 && (
+                <div className="quick-cash" aria-label="Pilihan uang cepat">
+                  {[total, ...cashSuggestions(total)].map((amount, i) => (
+                    <button
+                      key={amount}
+                      type="button"
+                      className={
+                        Number(cash) === amount
+                          ? "quick-cash-option active"
+                          : "quick-cash-option"
+                      }
+                      aria-pressed={Number(cash) === amount}
+                      onClick={() => setCash(String(amount))}
+                    >
+                      {i === 0 ? "Uang pas" : shortRupiah(amount)}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <div className="change-line">
+                <span>Kembalian</span>
+                <strong>
+                  {cash && changeAmount === null
+                    ? "Uang belum cukup"
+                    : rupiah(changeAmount || 0)}
+                </strong>
+              </div>
+            </>
+          )}
           <Button
             className="w-full"
-            disabled={
-              busy ||
-              !cartRows.length ||
-              !cash ||
-              changeAmount === null ||
-              invalidCart
-            }
+            disabled={busy || !canCheckout}
             onClick={checkout}
           >
-            {busy ? "Menyimpan transaksi…" : "Selesaikan Transaksi"}
+            {busy
+              ? isQris
+                ? "Membuat kode QRIS…"
+                : "Menyimpan transaksi…"
+              : isQris
+                ? "Bayar dengan QRIS"
+                : "Selesaikan Transaksi"}
             <ArrowUpRight size={17} />
           </Button>
           <small className="cash-note">
-            Pembayaran tunai · Harga diperiksa saat disimpan
+            {isQris ? "Pembayaran QRIS via Xendit" : "Pembayaran tunai"} · Harga
+            diperiksa saat disimpan
           </small>
         </div>
       </aside>
+      <QrisDialog {...qris} />
     </div>
   );
 }

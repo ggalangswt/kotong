@@ -1,9 +1,23 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { type Product, type Sale, type User, type Movement } from "@/lib/types";
+import {
+  type Product,
+  type Sale,
+  type User,
+  type Movement,
+  type PaymentMethod,
+} from "@/lib/types";
+import { useQrisPayment } from "@/components/cashier/use-qris-payment";
 import { day, change, report } from "@/lib/business";
-import { api } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
+
+// Only a dropped connection or unexpected server error leaves it unclear whether the sale was saved.
+// A QRIS provider failure is rolled back by the backend, so the cashier can simply retry.
+function isOutcomeUnknown(error: unknown) {
+  if (!(error instanceof ApiError)) return true;
+  return error.status >= 500 && error.code !== "Payment provider unavailable";
+}
 
 export function useWorkspace({ path, user }: { path: string; user: User }) {
   const router = useRouter();
@@ -37,6 +51,7 @@ export function useWorkspace({ path, user }: { path: string; user: User }) {
   });
   const [cart, setCart] = useState<Record<string, number>>({});
   const [cash, setCash] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
   const [receipt, setReceipt] = useState<{
     sale: Sale;
     cash: number;
@@ -160,31 +175,11 @@ export function useWorkspace({ path, user }: { path: string; user: User }) {
       return next;
     });
   }
-  async function checkout() {
-    if (
-      busyRef.current ||
-      !Object.keys(cart).length ||
-      changeAmount === null ||
-      invalidCart
-    )
-      return;
-    busyRef.current = true;
-    setBusy(true);
-    setError("");
-    try {
-      const data = await api<{ transaction: Sale }>("transactions", "POST", {
-        paymentMethod: "cash",
-        items: Object.entries(cart).map(([productId, quantity]) => ({
-          productId,
-          quantity,
-        })),
-      });
-      const value = {
-        sale: data.transaction,
-        cash: Number(cash),
-        name: user.name,
-      };
+  const finishSale = useCallback(
+    (sale: Sale, received: number) => {
+      const value = { sale, cash: received, name: user.name };
       setCart({});
+      setCash("");
       try {
         sessionStorage.setItem("kotong-receipt", JSON.stringify(value));
       } catch {
@@ -195,9 +190,46 @@ export function useWorkspace({ path, user }: { path: string; user: User }) {
         return;
       }
       router.push("/kasir/berhasil");
+    },
+    [router, user.name],
+  );
+  const onQrisPaid = useCallback(
+    (sale: Sale) => finishSale(sale, sale.totalAmount),
+    [finishSale],
+  );
+  const onQrisClosed = useCallback(
+    // Refresh first: it clears `error`, and the reloaded stock reflects the released reservation.
+    async (message: string) => {
+      await refresh();
+      setError(message);
+    },
+    [refresh],
+  );
+  const qris = useQrisPayment({ onPaid: onQrisPaid, onClosed: onQrisClosed });
+  const canCheckout =
+    Object.keys(cart).length > 0 &&
+    !invalidCart &&
+    (paymentMethod === "qris" || changeAmount !== null);
+  async function checkout() {
+    if (busyRef.current || !canCheckout) return;
+    busyRef.current = true;
+    setBusy(true);
+    setError("");
+    try {
+      const data = await api<{ transaction: Sale }>("transactions", "POST", {
+        paymentMethod,
+        items: Object.entries(cart).map(([productId, quantity]) => ({
+          productId,
+          quantity,
+        })),
+      });
+      if (data.transaction.status === "pending") qris.start(data.transaction);
+      else finishSale(data.transaction, Number(cash));
     } catch (e) {
       setError(
-        `${(e as Error).message} Jika koneksi terputus, periksa Riwayat Saya sebelum mengulangi pembayaran.`,
+        isOutcomeUnknown(e)
+          ? `${(e as Error).message} Jika koneksi terputus, periksa Riwayat Saya sebelum mengulangi pembayaran.`
+          : (e as Error).message,
       );
     } finally {
       setBusy(false);
@@ -286,6 +318,10 @@ export function useWorkspace({ path, user }: { path: string; user: User }) {
     busy,
     invalidCart,
     checkout,
+    canCheckout,
+    paymentMethod,
+    setPaymentMethod,
+    ...qris,
     receipt,
     router,
     productPage,

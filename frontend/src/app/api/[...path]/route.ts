@@ -47,11 +47,11 @@ async function handle(
   const allowed =
     reportExport ||
     (request.method === "GET" &&
-      /^(session|products|products\/[a-f\d]{24}\/stock-movements|transactions(?:\/[a-f\d]{24})?|cashiers|store)$/.test(
+      /^(session|products|products\/[a-f\d]{24}\/stock-movements|transactions(?:\/[a-f\d]{24}(?:\/payment)?)?|cashiers|store)$/.test(
         path,
       )) ||
     (request.method === "POST" &&
-      /^(auth\/login|auth\/register|products|products\/[a-f\d]{24}\/stock-adjustments|transactions|cashiers)$/.test(
+      /^(auth\/login|auth\/register|products|products\/[a-f\d]{24}\/stock-adjustments|transactions|transactions\/[a-f\d]{24}\/(?:cancel|simulate-payment)|cashiers)$/.test(
         path,
       )) ||
     (request.method === "PATCH" &&
