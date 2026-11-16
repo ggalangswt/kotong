@@ -120,6 +120,7 @@ a svg {
   z-index: 30;
   border-top-right-radius: 40px;
   border-bottom-right-radius: 40px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
 }
 .brand {
   display: flex;
@@ -545,6 +546,9 @@ nav {
 .cart-item-title button {
   color: #7e8b78;
   padding: 4px;
+}
+.cart-item-title .cart-remove-icon {
+  color: #dc2626;
 }
 .cart-item p {
   font-size: 10px;
