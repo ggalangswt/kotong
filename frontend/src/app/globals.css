@@ -118,6 +118,8 @@ a svg {
   display: flex;
   flex-direction: column;
   z-index: 30;
+  border-top-right-radius: 40px;
+  border-bottom-right-radius: 40px;
 }
 .brand {
   display: flex;
