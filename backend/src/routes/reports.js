@@ -1,5 +1,6 @@
 const express = require("express");
 const Transaction = require("../models/Transaction");
+const { UNPAID_STATUSES } = Transaction;
 
 const router = express.Router();
 
@@ -30,7 +31,7 @@ router.get("/export", async (req, res) => {
   }
   const endExclusive = new Date(lastDay.getTime() + 86_400_000);
   const [{ daily, products }] = await Transaction.aggregate([
-    { $match: { date: { $gte: firstDay, $lt: endExclusive } } },
+    { $match: { status: { $nin: UNPAID_STATUSES }, date: { $gte: firstDay, $lt: endExclusive } } },
     {
       $facet: {
         daily: [
@@ -120,6 +121,7 @@ router.get("/daily-revenue", async (req, res) => {
   const result = await Transaction.aggregate([
     {
       $match: {
+        status: { $nin: UNPAID_STATUSES },
         date: {
           $gte: startDate,
           $lt: endDate,
@@ -150,6 +152,7 @@ router.get("/daily-revenue", async (req, res) => {
 // GET /api/reports/best-sellers
 router.get("/best-sellers", async (_req, res) => {
   const products = await Transaction.aggregate([
+    { $match: { status: { $nin: UNPAID_STATUSES } } },
     {
       $unwind: "$items",
     },

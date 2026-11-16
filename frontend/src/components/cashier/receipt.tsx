@@ -28,21 +28,24 @@ export function ReceiptView({ receipt, router }: Props) {
             <p>
               {store.name}
               <br />
-              Struk pembayaran tunai
+              Struk pembayaran{" "}
+              {receipt.sale.paymentMethod === "qris" ? "QRIS" : "tunai"}
             </p>
             <SaleDetail sale={receipt.sale} cashier={receipt.name} />
-            <div className="receipt-money">
-              <span>Uang diterima</span>
-              <strong>{rupiah(receipt.cash)}</strong>
-              <span>
-                {receipt.cash >= receipt.sale.totalAmount
-                  ? "Kembalian"
-                  : "Kekurangan pembayaran"}
-              </span>
-              <strong>
-                {rupiah(Math.abs(receipt.cash - receipt.sale.totalAmount))}
-              </strong>
-            </div>
+            {receipt.sale.paymentMethod === "cash" && (
+              <div className="receipt-money">
+                <span>Uang diterima</span>
+                <strong>{rupiah(receipt.cash)}</strong>
+                <span>
+                  {receipt.cash >= receipt.sale.totalAmount
+                    ? "Kembalian"
+                    : "Kekurangan pembayaran"}
+                </span>
+                <strong>
+                  {rupiah(Math.abs(receipt.cash - receipt.sale.totalAmount))}
+                </strong>
+              </div>
+            )}
             <p className="receipt-thanks">
               Terima kasih sudah berbelanja.
               <br />

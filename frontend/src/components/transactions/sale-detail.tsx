@@ -1,6 +1,6 @@
 "use client";
 import { type Sale } from "@/lib/types";
-import { rupiah, dateTime } from "@/lib/business";
+import { rupiah, dateTime, paymentLabel } from "@/lib/business";
 import { DataTable } from "@/components/shared/data-table";
 
 export function SaleDetail({ sale, cashier }: { sale: Sale; cashier: string }) {
@@ -21,7 +21,7 @@ export function SaleDetail({ sale, cashier }: { sale: Sale; cashier: string }) {
         </div>
         <div>
           <dt>Pembayaran</dt>
-          <dd>Tunai</dd>
+          <dd>{paymentLabel(sale.paymentMethod)}</dd>
         </div>
       </dl>
       <DataTable

@@ -1,4 +1,8 @@
-import type { Sale } from "./types";
+import type { PaymentMethod, Sale } from "./types";
+// Sales saved before payment statuses existed have no status and were paid in cash.
+export const isPaid = (sale: Sale) => (sale.status ?? "paid") === "paid";
+export const paymentLabel = (method: PaymentMethod) =>
+  method === "qris" ? "QRIS" : "Tunai";
 export const rupiah = (value: number) =>
   new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -20,7 +24,7 @@ export function change(total: number, cash: number) {
 }
 export function report(sales: Sale[], start: string, end: string) {
   const selected = sales.filter(
-    (sale) => day(sale.date) >= start && day(sale.date) <= end,
+    (sale) => isPaid(sale) && day(sale.date) >= start && day(sale.date) <= end,
   );
   const daily = new Map<
     string,
@@ -54,3 +58,17 @@ export function report(sales: Sale[], start: string, end: string) {
     products: [...products.values()].sort((a, b) => b.quantity - a.quantity),
   };
 }
+const COMMON_NOTES = [10000, 20000, 50000, 100000];
+const ROUND_UP_STEPS = [10000, 50000, 100000];
+const MAX_CASH_SUGGESTIONS = 4;
+// Amounts a customer is likely to hand over, strictly above the total ("uang pas" is offered separately).
+export function cashSuggestions(total: number): number[] {
+  if (!Number.isSafeInteger(total) || total <= 0) return [];
+  const roundUps = ROUND_UP_STEPS.map((step) => Math.ceil(total / step) * step);
+  return [...new Set([...COMMON_NOTES, ...roundUps])]
+    .filter((amount) => amount > total)
+    .sort((a, b) => a - b)
+    .slice(0, MAX_CASH_SUGGESTIONS);
+}
+export const shortRupiah = (value: number) =>
+  `${new Intl.NumberFormat("id-ID", { maximumFractionDigits: 1 }).format(value / 1000)}rb`;
