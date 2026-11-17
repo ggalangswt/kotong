@@ -31,6 +31,7 @@ export type Sale = {
     qrString?: string;
     expiresAt?: string;
     paidAt?: string;
+    testMode?: boolean;
   };
 };
 export type PaymentMethod = "cash" | "qris";

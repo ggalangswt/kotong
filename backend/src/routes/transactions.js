@@ -24,6 +24,8 @@ function response(transaction) {
     status: transaction.status || 'paid',
     payment: transaction.payment ? {
       qrString: transaction.status === 'pending' ? transaction.payment.qrString : undefined,
+      // Lets the cashier screen offer "simulate payment" only while Xendit runs with a test key.
+      testMode: transaction.status === 'pending' ? xendit.isTestMode() : undefined,
       expiresAt: transaction.payment.expiresAt,
       paidAt: transaction.payment.paidAt,
     } : undefined,

@@ -14,9 +14,6 @@ import {
 import { rupiah } from "@/lib/business";
 import { type QrisPaymentState } from "@/components/cashier/use-qris-payment";
 
-// Xendit only lets test keys simulate payments; the backend rejects this call in live mode.
-const SHOW_SIMULATE = process.env.NODE_ENV !== "production";
-
 function useCountdown(expiresAt?: string) {
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
@@ -42,6 +39,8 @@ export function QrisDialog({
 }: Props) {
   const remaining = useCountdown(pendingSale?.payment?.expiresAt);
   const qrString = pendingSale?.payment?.qrString;
+  // The backend decides: true only while Xendit runs with a test key (it also refuses simulation otherwise).
+  const canSimulate = pendingSale?.payment?.testMode === true;
   return (
     // Closing by backdrop/Escape is disabled: the cashier must cancel explicitly so stock is returned.
     <Dialog open={pendingSale !== null} disablePointerDismissal>
@@ -80,7 +79,7 @@ export function QrisDialog({
           <Button variant="outline" disabled={qrisBusy} onClick={cancel}>
             Batalkan
           </Button>
-          {SHOW_SIMULATE && (
+          {canSimulate && (
             <Button disabled={qrisBusy} onClick={simulate}>
               Simulasikan bayar (test)
             </Button>
