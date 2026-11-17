@@ -106,13 +106,22 @@ export function Navbar() {
       <nav
         aria-label="Navigasi utama"
         className={cn(
-          "fixed top-0 left-0 z-50 w-full origin-top rounded-b-2xl bg-white px-5 py-4 shadow-lg",
+          "fixed top-0 left-1/2 z-50 w-full max-w-[100vw] -translate-x-1/2 rounded-b-2xl bg-white px-6 py-4 shadow-lg",
           "transition-all duration-300 ease-in-out",
-          isScrolled && "top-6 scale-[0.96] rounded-2xl",
+          // Floating state shrinks to the landing content width (.landing main max-width: 1180px).
+          isScrolled &&
+            "top-6 max-w-[min(1180px,calc(100vw-2rem))] rounded-2xl",
           isScrolled && isMenuOpen && "rounded-b-none",
         )}
       >
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between">
+        {/* Content narrows together with the bar (same duration/easing) so it never lags and then jumps. */}
+        <div
+          className={cn(
+            "mx-auto flex w-full items-center justify-between",
+            "transition-[max-width] duration-300 ease-in-out",
+            isScrolled ? "max-w-[1132px]" : "max-w-[1280px]",
+          )}
+        >
           {/* Kiri: logo */}
           <Link href="/" aria-label="KOTONG — Beranda" onClick={closeMenu}>
             <Brand />
