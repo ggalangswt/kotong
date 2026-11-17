@@ -15,7 +15,7 @@ import { Brand } from "@/components/shared/brand";
 import { AppShell } from "@/components/layout/app-shell";
 import { StoreProvider } from "@/components/session/store-context";
 import { homeFor, type Role } from "@/components/layout/navigation";
-import { api } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 import { type User } from "@/lib/types";
 
 const RECEIPT_KEY = "kotong-receipt";
@@ -39,7 +39,9 @@ export function RoleGate({
   const path = usePathname();
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
-  const [ready, setReady] = useState(false);
+  // The error screen is driven only by an actual failure. "No user yet" always means "still loading":
+  // Next keeps this component's state while another route is shown, so after logout -> login it comes
+  // back with user === null for a moment and must not flash "Toko belum terhubung".
   const [sessionError, setSessionError] = useState("");
 
   const loadSession = useCallback(async () => {
@@ -48,9 +50,9 @@ export function RoleGate({
       const data = await api<{ user: User }>("session");
       setUser(data.user);
     } catch (e) {
-      setSessionError((e as Error).message);
-    } finally {
-      setReady(true);
+      // 401: the unauthorized listener is already redirecting to /login.
+      if (e instanceof ApiError && e.status === 401) return;
+      setSessionError((e as Error).message || "Sesi tidak dapat dimuat.");
     }
   }, []);
 
@@ -75,7 +77,8 @@ export function RoleGate({
     router.replace("/login");
   }
 
-  if (!ready) return <div className="loading">Menyiapkan toko…</div>;
+  if (!user && !sessionError)
+    return <div className="loading">Menyiapkan toko…</div>;
   if (!user)
     return (
       <main className="connection">
