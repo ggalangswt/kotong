@@ -213,10 +213,10 @@ export function LandingPage() {
             <li>
               <span>2</span>
               <div>
-                <h3>Terima pembayaran</h3>
+                <h3>Pilih metode pembayaran</h3>
                 <p>
-                  Masukkan uang tunai yang diterima. KOTONG menghitung
-                  kembaliannya.
+                  Pilih Tunai atau QRIS. Kembalian tunai dihitung otomatis 
+                  oleh KOTONG.
                 </p>
               </div>
             </li>
