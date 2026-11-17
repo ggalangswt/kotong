@@ -60,6 +60,7 @@ test('QRIS sales reserve stock until paid, and release it when cancelled or fail
     const sale = created.body.transaction;
     assert.equal(sale.status, 'pending');
     assert.equal(sale.payment.qrString, 'QRIS-10000');
+    assert.equal(sale.payment.testMode, true);
     assert.equal(await stock(), 8);
 
     // Pending sales do not count as revenue.
@@ -76,8 +77,17 @@ test('QRIS sales reserve stock until paid, and release it when cancelled or fail
     assert.equal(simulated.status, 200);
     assert.equal(simulated.body.transaction.status, 'paid');
     assert.equal(simulated.body.transaction.payment.qrString, undefined);
+    assert.equal(simulated.body.transaction.payment.testMode, undefined);
     assert.equal(await stock(), 8);
     assert.equal((await request(app).post(`/api/transactions/${sale.id}/cancel`).set('Authorization', auth(cashier))).status, 409);
+
+    // Live key: the screen must not offer simulation and the endpoint refuses it.
+    process.env.XENDIT_SECRET_KEY = 'xnd_production_test';
+    const live = (await sell(1)).body.transaction;
+    assert.equal(live.payment.testMode, false);
+    assert.equal((await request(app).post(`/api/transactions/${live.id}/simulate-payment`).set('Authorization', auth(cashier))).status, 404);
+    await request(app).post(`/api/transactions/${live.id}/cancel`).set('Authorization', auth(cashier));
+    process.env.XENDIT_SECRET_KEY = 'xnd_development_test';
 
     // Cancel: stock comes back exactly once.
     const toCancel = (await sell(3)).body.transaction;
