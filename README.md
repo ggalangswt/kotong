@@ -1,6 +1,6 @@
 # Kotong
 
-Sistem kasir berbasis web untuk usaha kelontong — menyatukan katalog produk, stok, transaksi, dan laporan penjualan dalam satu aplikasi.
+Sistem kasir berbasis web untuk usaha kelontong, menyatukan katalog produk, stok, transaksi, dan laporan penjualan dalam satu aplikasi.
 
 ## Latar Belakang
 
@@ -10,12 +10,12 @@ Toko kelontong seringkali mencatat penjualan di dua tempat berbeda: sebagian di 
 
 ## Fitur Utama
 
-- **Manajemen Produk** — kelola nama, kategori, harga, dan stok produk (CRUD penuh)
-- **Transaksi Otomatis** — setiap transaksi mengurangi stok secara otomatis dan real-time
-- **Peringatan Stok Menipis** — notifikasi saat stok produk turun di bawah ambang batas
-- **Laporan Penjualan** — omzet harian dan daftar produk terlaris
-- **Role-Based Access** — pemilik mengelola produk & laporan, kasir hanya menjalankan transaksi
-- **Autentikasi Aman** — kata sandi tersimpan dalam bentuk hashing
+- **Manajemen Produk**: kelola nama, kategori, harga, dan stok produk (CRUD penuh)
+- **Transaksi Otomatis**: setiap transaksi mengurangi stok secara otomatis dan real-time
+- **Peringatan Stok Menipis**: notifikasi saat stok produk turun di bawah ambang batas
+- **Laporan Penjualan**: omzet harian dan daftar produk terlaris
+- **Role-Based Access**: pemilik mengelola produk & laporan, kasir hanya menjalankan transaksi
+- **Autentikasi Aman**: kata sandi tersimpan dalam bentuk hashing
 
 ### Fitur Tambahan (opsional)
 
@@ -72,6 +72,12 @@ Buat file `.env` pada masing-masing folder (`backend` dan `frontend`) sesuai con
 2. Front End: Monica Anastasya Dantina (24/544527/TK/60525)
 3. Front End: Diaz Amantajati Susilo (24/545483/TK/60678)
 4. Back End: Galang Swastika Ramadhan (24/538251/TK/59692)
+
+## Video Demo Link
+[Video Demo](https://drive.google.com/drive/folders/1tqr-aqAm1bvG62NHz-UjlRELEk4ItLVu)
+
+## Live Website Link
+[Kotong Website](https://kotong.store/)
 
 ### Laporan Milestone 1
 
