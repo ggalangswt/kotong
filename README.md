@@ -2,6 +2,12 @@
 
 Sistem kasir berbasis web untuk usaha kelontong, menyatukan katalog produk, stok, transaksi, dan laporan penjualan dalam satu aplikasi.
 
+| | Link |
+|---|---|
+| Live Website | [kotong.store](https://kotong.store/) |
+| Video Demo | [Google Drive](https://drive.google.com/drive/folders/1tqr-aqAm1bvG62NHz-UjlRELEk4ItLVu) |
+
+
 ## Latar Belakang
 
 Toko kelontong seringkali mencatat penjualan di dua tempat berbeda: sebagian di buku catatan, sebagian di HP. Akibatnya stok tidak sesuai dengan barang di rak, pemilik tidak tahu produk mana yang paling laku, dan penyusunan laporan harian menjadi pekerjaan manual yang melelahkan.
@@ -72,12 +78,6 @@ Buat file `.env` pada masing-masing folder (`backend` dan `frontend`) sesuai con
 2. Front End: Monica Anastasya Dantina (24/544527/TK/60525)
 3. Front End: Diaz Amantajati Susilo (24/545483/TK/60678)
 4. Back End: Galang Swastika Ramadhan (24/538251/TK/59692)
-
-## Video Demo Link
-[Video Demo](https://drive.google.com/drive/folders/1tqr-aqAm1bvG62NHz-UjlRELEk4ItLVu)
-
-## Live Website Link
-[Kotong Website](https://kotong.store/)
 
 ### Laporan Milestone 1
 
